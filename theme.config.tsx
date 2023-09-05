@@ -6,6 +6,7 @@ import { BsTwitter } from 'react-icons/bs';
 const config: DocsThemeConfig = {
   logo: <span style={{display: "flex", alignItems: "center"}}><Image alt="logo" width={30} height={30} src="/logo-400x400-rounded.png" />&nbsp;<b>Pipeless</b></span>,
   logoLink: 'https://pipeless.ai',
+  primaryHue: 297, // Equivalent to #701a75
   project: {
     link: 'https://github.com/miguelaeh/pipeless',
   },

@@ -14,7 +14,7 @@ const config: DocsThemeConfig = {
     link: 'https://twitter.com/pipeless_ai',
     icon: <BsTwitter size={25} />
   },
-  docsRepositoryBase: 'https://github.com/pipeless/website',
+  docsRepositoryBase: 'https://github.com/pipeless/docs',
   footer: {
     text: <p>Pipeless Docs - Copyright &copy; 2023</p>,
   },

@@ -4,7 +4,6 @@ const withNextra = require('nextra')({
 })
 
 module.exports = withNextra({
-  basePath: '/docs',
   webpack(config) {
     const allowedSvgRegex = /components\/icons\/.+\.svg$/
 

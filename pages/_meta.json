@@ -1,0 +1,15 @@
+{
+  "index": "Introduction",
+  "v0": "v0.x.x",
+  "about": {
+    "title": "Home",
+    "type": "page",
+    "href": "https://pipeless.ai"
+  },
+  "contact": {
+    "title": "Contact ↗",
+    "type": "page",
+    "href": "https://lfkz9noht13.typeform.com/to/aeOqKGPt",
+    "newWindow": true
+  }
+}

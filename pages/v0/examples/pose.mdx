@@ -1,0 +1,110 @@
+# Multi-pose estimation example
+
+import { Steps, Callout } from 'nextra/components';
+
+In this example we will track the pose of a person during the video and print over the image the keypoints.
+In this case, we make use of the `pipeless_ai_tf_models` package to import the [multipose estimation model](/v0/models/tensorflow/multi-pose-estimation), we don't even have to bring our own model, everything is ready to use.
+
+You can directly execute the example. To learn what each line of the application does on the [walkthrough section](#walkthrough).
+
+## Requirements
+
+* Pipeless: `pip install pipeless_ai_cli`
+
+* Pipeless TF models: `pip install pipeless_ai_tf_models`
+
+* OpenCV: `pip install opencv-python`
+
+<Callout>
+    If you don't have the required dependencie for Pipeless installed check the [installation guide](/v0/install) or [use Docker](/v0/install#using-docker-) instead.
+</Callout>
+
+## Run the example
+
+<Steps>
+### Clone the repo
+
+```bash copy
+git clone https://github.com/miguelaeh/pipeless
+cd pipeless
+```
+
+### Move to the `examples/pose` directory
+
+``` bash copy
+cd examples/pose
+```
+
+### Configure your paths
+
+Update `config.yaml` with the paths used within your system. They **must be absolute paths**. You need to edit the lines highlighted below:
+
+```yaml {7,15}filename="config.yaml"
+input:
+  address:
+    host: localhost
+    port: 1234
+  video:
+    enable: true
+    uri: file:///home/example/path/woman-walking.mp4
+log_level: INFO
+output:
+  address:
+    host: localhost
+    port: 1237
+  video:
+    enable: true
+    uri: file:///home/example/path/output.mp4
+worker:
+  n_workers: 1
+```
+
+### Run the application
+
+Simply execute:
+
+```bash copy
+pipeless run
+```
+
+### Visualize the output
+
+You can use any video player to see the results. For example:
+
+```bash copy
+mpv cats-output.mp4
+```
+</Steps>
+
+## Walkthrough
+
+This is a step by step description of what every line of the application code is doing.
+
+The first thing we need to do is to create an instance of out model. We do it into the `before` stage:
+
+```python copy
+def before(self, ctx):
+    ctx['model'] = MultiPoseEstimationLightning()
+```
+
+Once we have an instance of our model, we can use it on every frame to get bounding boxes and keypoints:
+
+```python copy
+def process(self, frame, ctx):
+    model = ctx['model']
+    bboxes, keypoints = model.invoke_inference(frame)
+```
+
+Finally, we print our bounding boxes and keypoints into the original frame before returning it, so we can visualize the detections on the output:
+
+```python copy
+for bbox in bboxes:
+    cv2.rectangle(frame, (bbox[1], bbox[0]), (bbox[3], bbox[2]), (0, 255, 0), 2)
+
+for keypoint in keypoints:
+    cv2.circle(frame, (keypoint[0], keypoint[1]), 5, (255, 0, 255), -1)
+
+return frame
+```
+
+And that's all! Now execute `pipeless run` and open the output with any media player.

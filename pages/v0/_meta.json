@@ -1,0 +1,12 @@
+{
+    "index": "Index",
+    "install": "Installation",
+    "getting-started": "Getting Started",
+    "container": "Container images",
+    "configuration": "Configuration Options",
+    "formats": "Stream Formats and Protocols",
+    "plugins": "Plugins",
+    "models": "Ready to Use CV Models",
+    "examples": "Examples",
+    "changes": "Version Notable Changes"
+}

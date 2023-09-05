@@ -1,0 +1,60 @@
+# Introduction
+
+import { Cards, Card } from 'nextra/components';
+import { CardsIcon, StarsIcon, ChevronRightIcon } from '../components/icons';
+
+Welcome to the Pipeless documentation!
+
+## What is Pipeless?
+
+Pipeless is an **open-source** multimedia framework to **easily** create and deploy computer vision apps in minutes without building and maintaining multimedia pipelines. It runs either locally or in the cloud and can be easily deployed thanks to the container images.
+
+You can create and deploy an application that analyzes **real-time** streams in less than 10 lines of code and just within couple minutes.
+
+With Pipeless you can analyze a stream, for example running inference with a Computer Vision (CV) model, and then you can export the obtained data or you can use it to edit the stream on the fly and forward it. You can even do both things at the same time 🤯!.
+
+For example, you can build thing like this:
+
+<video playsInline autoPlay muted loop>
+    <source src="https://pipeless.ai/cats.mp4" />
+    It seems your browser doesn't support the video tag.
+</video>
+
+With just these simple lines of code:
+
+```python copy filename="app.py"
+from pipeless_ai.lib.app.app import PipelessApp
+import cv2
+
+class App(PipelessApp):
+    def before(self, ctx):
+        xml_data = cv2.CascadeClassifier('cats.xml')
+        ctx['xml_data'] = xml_data
+
+    def process(self, frame, ctx):
+        model = ctx['xml_data']
+        for box in bounding_boxes:
+            a, b, width, height = box
+            cv2.rectangle(frame, (a, b), (a + width, b + height), (255, 0, 255), 2)
+
+        return frame
+```
+
+## Where to start?
+
+Nobody likes to read docs, so you can start by running some of the examples and checking/modifying their code. If you need more context on what is happening, you can come back to the getting started guide and learn from the basics.
+
+In the rare case in which you are one of those persons that read the docs, we hope you enjoy the guides! Any feedback on the docs is really appreciated!
+
+<Cards>
+  <Card icon={<ChevronRightIcon />} title="Getting Started" href="/v0/getting-started" />
+  <Card icon={<StarsIcon />} title="Examples" href="/v0/examples" />
+</Cards>
+
+## Documentation Versions
+
+Pipeless versioning follows the semver standard, except for versions annotated with `alpha` or `beta`, which may include breaking changes without a major version bump.
+
+<Cards>
+  <Card icon={<CardsIcon />} title="V0.x.x" href="/v0" />
+</Cards>

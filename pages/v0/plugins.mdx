@@ -1,0 +1,21 @@
+# Pipeless Plugins
+
+Pipeless provides an optional plugins package that provides useful plugins for common tasks such as producing events to Kafka, skipping image processing when they are similar, etc.
+
+To install the plugins package run:
+
+```bash copy
+pip install pipeless-ai-plugins
+```
+
+To import it on your Pipeless project use:
+
+```python copy
+from pipeless_ai_plugins.<plugin_name> import <plugin_class>
+```
+
+To get more information about a specific plugin, including how to use it please check the specific plugin docs.
+
+## List of Available Plugins
+
+- [Kafka](/v0/plugins/kafka/): Export events to a Kafka topic

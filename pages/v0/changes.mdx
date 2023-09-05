@@ -1,0 +1,9 @@
+# Versions Notable Changes
+
+This is a list of notable changes between versions. Since Pipeless uses semver, you won't typically find here breaking changes but notices about deprecations new configuration options, etc.
+
+## Core version `0.1.6-alpha` and CLI version `0.1.5-alpha`
+
+These versions include a new **optional** parameter to configure the reception buffers of the sockets, which is useful to adjust the buffer sizes to the processing time.
+
+With the above change, we also moved the **n_workers** option to the `worker` configuration section, which constitutes a **breaking change**. Since Pipeless is still in alpha, we are not increasing the major version.

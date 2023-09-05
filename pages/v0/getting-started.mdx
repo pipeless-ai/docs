@@ -1,0 +1,72 @@
+# Getting Started with Pipeless 🚀
+
+Let's take a look at how to create a Pipeless project, the files it contains and how to use them. Make sure to have Pipeless and its requirements installed before continue.
+
+## Create a Project
+
+Run the following command:
+
+```bash copy
+pipeless create project my_awesome_project
+```
+
+The `create project` command will create a directory with the name of the project containing the following files:
+
+* `app.py`: contains your `App` class. This file contains the implementation of your processing functions. For example, throwing inference on a CV model, editing a frame, etc. Within this file you will implement the hooks in charge of procesing the media frames.
+
+* `config.yaml`: contains the configuration for each Pipeless component. You can also override all the configuration options via env vars starting with `PIPELESS_` followed by the option YAML path in capital letters. If defined, environment variables take precedence over the configuration file content. Find the whole list of configuration options in the [configuration](/configuration) section.
+
+## Implementing Media Analysis/Processing
+
+The processing steps are defined as methods of the `App` class. Pipeless loads the hooks you implement and it executes them at the proper time. All of them are optional, you just need to implement those required by your use case.
+
+### Initial and Final Stages
+
+These are executed just once per stream. They are tipically used when your app requires to execute some code before starting the processing of a stream or once the stream reaches its end.
+
+- `before`: contains code that is executed before processing any content from a stream
+- `after`: contains code that is executed after reaching the end of a stream.
+
+### Processing Stages
+
+These are the stages that actually modify/analyze/process the multimedia streams. All of them receive a frame and **must** return a frame (even if it is the same frame without modifications). The frames can be of any type(audio, video, text, metadata, ...).
+
+- `pre_process`: code to execute to prepare a frame to be processed
+- `process`: code for the actual frame processing
+- `post-process`: code to execute after a frame is processed
+
+These stages have been defined for a proper logical code structure.
+
+### Context
+
+You app can maintain its own internal state. This is useful when you need to pass information between stages.
+
+By default, an internal context is created and can be accessed via the `ctx` variable.
+
+You can also define your own variables within the `App` class, however, note that if you override the constructor the context won't be initialized properly.
+
+## Running the App
+
+To test your app execute the following from your app directory:
+
+```bash copy
+pipeless run
+```
+
+The above command will execute all the components by default. If you need to execute just one of the components use:
+
+```bash copy
+pipeless run <component>
+```
+
+where `<component>` must be one of `input`, `worker`, `output` or `all` (default).
+
+### Core Components
+
+Pipeless has been designed for easy local and edge execution but also, to easily deploy to the cloud. Thus, it is split in 3 main components:
+
+* `input`: Receives the media streams, demux and decode the streams.
+* `worker`: Receives raw media frames, and processes them according to the user app. You can deploy any number of workers and the processing will be load balanced automatically using a round robin schedule. When deployed to the cloud this allows to reach **real time** processing even with each frame takes relatively long times to process. Note in that case, that each worker executes the `before` and `after` stages and that each worker has a different instance of the running app context.
+* `output` (optional): Receives the processed raw media frames, encodes and mux them into the proper container format for the output protocol provided by the user
+
+Each component runs with independence of the others.

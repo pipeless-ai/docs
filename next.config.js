@@ -4,6 +4,7 @@ const withNextra = require('nextra')({
 })
 
 module.exports = withNextra({
+  basePath: '/docs',
   assetPrefix: 'https://docs.pipeless.ai',
   webpack(config) {
     const allowedSvgRegex = /components\/icons\/.+\.svg$/

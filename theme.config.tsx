@@ -21,6 +21,18 @@ const config: DocsThemeConfig = {
   search: {
     loading: "Loading...",
   },
+  head: (
+    <>
+      <meta property="og:image" content="docs.pipeless.ai/logo-400x400-rounded.png" />
+      <meta property="og:title" content="Pipeless Documentation" />
+      <meta property="og:description" content="Documentation about the Pipeless computer vision framework" />
+    </>
+  ),
+  useNextSeoProps() {
+    return {
+      titleTemplate: '%s – Pipeless'
+    }
+  }
 }
 
 export default config

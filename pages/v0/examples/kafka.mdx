@@ -130,10 +130,10 @@ This is a step by step description of what every line of the application code is
 
 ### Before stage
 
-In the before state we initiate the producer connection to our Kafka cluster and store on the context so we can use the producer later to send messages to the topic. Initiating the connection is realy simple thanks to the Pipeless Kafka Plugin:
+In the before state we initiate the producer connection to our Kafka cluster so we can use the producer later to send messages to the topic. Initiating the connection is realy simple thanks to the Pipeless Kafka Plugin:
 
 ```python copy
-ctx['producer'] = KafkaProducer()
+self.producer = KafkaProducer()
 ```
 
 ### Processing stage
@@ -141,12 +141,8 @@ ctx['producer'] = KafkaProducer()
 In this case, instead of editing the frame to draw a bounding box and return the modified video frame like we did on the original cats example, we simply identify the bounding box and, if there is a bounding box, we send a message to the `pipeless` kafka topic:
 
 ```python copy
-producer = ctx['producer']
-
-...
-
 if len(bounding_boxes) > 0:
-    producer.produce('pipeless', 'There is a cat!')
+    self.producer.produce('pipeless', 'There is a cat!')
 ```
 
 <Callout>The bounding boxes detection is exactly the same than on the cats example.</Callout>

@@ -37,13 +37,15 @@ These are the stages that actually modify/analyze/process the multimedia streams
 
 These stages have been defined for a proper logical code structure.
 
-### Context
+### App internal state
 
-You app can maintain its own internal state. This is useful when you need to pass information between stages.
+The application maintains its own internal state. This is useful when you need to pass information between stages.
 
-By default, an internal context is created and can be accessed via the `ctx` variable.
+Simply use class variables within the `App` class.
 
-You can also define your own variables within the `App` class, however, note that if you override the constructor the context won't be initialized properly.
+```python copy
+self.some_variable = "some_value"
+```
 
 ## Running the App
 
@@ -66,7 +68,7 @@ where `<component>` must be one of `input`, `worker`, `output` or `all` (default
 Pipeless has been designed for easy local and edge execution but also, to easily deploy to the cloud. Thus, it is split in 3 main components:
 
 * `input`: Receives the media streams, demux and decode the streams.
-* `worker`: Receives raw media frames, and processes them according to the user app. You can deploy any number of workers and the processing will be load balanced automatically using a round robin schedule. When deployed to the cloud this allows to reach **real time** processing even with each frame takes relatively long times to process. Note in that case, that each worker executes the `before` and `after` stages and that each worker has a different instance of the running app context.
+* `worker`: Receives raw media frames, and processes them according to the user app. You can deploy any number of workers and the processing will be load balanced automatically using a round robin schedule. When deployed to the cloud this allows to reach **real time** processing even with each frame takes relatively long times to process. Note in that case, that each worker executes the `before` and `after` stages and that each worker has a different instance of the running application.
 * `output` (optional): Receives the processed raw media frames, encodes and mux them into the proper container format for the output protocol provided by the user
 
 Each component runs with independence of the others.

@@ -4,7 +4,7 @@ const withNextra = require('nextra')({
 })
 
 module.exports = withNextra({
-  assetPrefix: 'https://docs.pipeless.ai',
+	assetPrefix: process.env.NODE_ENV === 'production' ? 'https://docs.pipeless.ai' : '',
   webpack(config) {
     const allowedSvgRegex = /components\/icons\/.+\.svg$/
 

@@ -8,7 +8,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     const handleRouteChange = (url) => {
-      if (url.startsWith('/') && window.location.hostname === "pipeless.ai") {
+      if (url.startsWith('/') && window.location.hostname === "www.pipeless.ai") {
          // HACK: to allow the page reload, we trick the URL that is
          // shown to the user by adding `/docs` when accesed from
          // pipeless.ai instead of docs.pipeless.ai

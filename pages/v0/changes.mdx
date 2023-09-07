@@ -2,6 +2,15 @@
 
 This is a list of notable changes between versions. Since Pipeless uses semver, you won't typically find here breaking changes but notices about deprecations new configuration options, etc.
 
+### Core version `0.1.9` and CLI version `0.1.7`
+
+The context has been replaced by class variables, thus, it is no longer used.
+
+Required changes on your application code:
+
+* Update your app methods to **NOT** receive the `ctx` parameter.
+* Update any usage of the context, i.e. references to `ctx['xxx']` must be replaced by class variables, i.e. `self.xxx`.
+
 ## Core version `0.1.6-alpha` and CLI version `0.1.5-alpha`
 
 These versions include a new **optional** parameter to configure the reception buffers of the sockets, which is useful to adjust the buffer sizes to the processing time.

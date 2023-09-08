@@ -1,21 +1,56 @@
 # Pipeless Plugins
 
-Pipeless provides an optional plugins package that provides useful plugins for common tasks such as producing events to Kafka, skipping image processing when they are similar, etc.
+Pipeless has a built in plugin system. Anyone can create and register plugins for common tasks such as producing events to Kafka, skipping image processing when they are similar, etc.
 
-To install the plugins package run:
+Pipeless also has a plugins registry to make it easy for you to manage plugins in your project. You can list all the available plugins in registry by running:
 
 ```bash copy
-pip install pipeless-ai-plugins
+pipeless list available-plugins
 ```
 
-To import it on your Pipeless project use:
+To install a plugin into your Pipeless project simply run:
 
 ```python copy
-from pipeless_ai_plugins.<plugin_name> import <plugin_class>
+pipeless install plugin plugin_id
 ```
 
-To get more information about a specific plugin, including how to use it please check the specific plugin docs.
+You can find the `plugin_id` in the result of the list command above.
 
-## List of Available Plugins
+You can override the plugin installation directory providing `--plugins-root <your_directory>`. If you override the plugins directory, remember to configure Pipeless to load the plugins from that directory instead of the default one.
+
+## How plugins works
+
+When running Pipeless, the worker loads all the plugins under the `plugins` folder of the application directory. You can override the plugins directory path using the `plugins.dir` configuration option or exporting the `PIPELESS_PLUGINS_DIR` environment variable.
+
+A plugin is a piece of code that extends the behaviour of the Pipeless hooks out-of-the box and/or embeeds some extra methods/utilities that you can call from your Pipeless application.
+
+### Extra methods
+
+When a plugin adds extra methods to the application, you can access them via `self.plugins.plugin_id.method` within your implementation of the `App` class.
+
+The `plugin_id` is the ID of the plugin in the plugins registry, which is easy to obtain with the `list` command.
+
+### Extended hooks
+
+A plugin that extends some application hook executes code **before** your code for that hook. For example, if you add some code to the `process` hook and you installed a plugin that also adds code to the `process` hook, the plugin code gets executed before your code. In this way, a plugin could, for example, make some changes to a frame before the frame arrives your code.
+
+## Plugins execution
+
+The plugins are loaded and executed in order by the Pipeless worker. Thus, you **must** provide the execution order in your configuration via the `plugins.order` option in the `config.yaml` or by exporting `PIPELESS_PLUGINS_ORDER`.
+Simply add a list that can be separated by commas (`,`), semi-colons (`;`) or vertical bars (`|`).
+
+As an example, let's imagine you installed two plugins and that both implement the `process` hook. If we add the execution order as `plugin_1,plugin_2` the flow will the be following:
+
+1. The `before` hook will be executed as always, if defined.
+1. The `pre-process` hook will be executed as always, if defined.
+1. The `process` hook will execute the implementation of plugin_1's `process` hook, then pipe the frame to plugin_2's `process` hook and then pipe the frame to your application's `process` hook.
+1. The `post-process` hook will be executed as always, if defined.
+1. The `after` hook will be executed as always, if defined.
+
+## List of official plugins
+
+Pipeless has official plugins, which are plugins maintained by our team, as well as community plugins, which are plugins maintained by other developers.
+
+The list below contains the plugins mantained by the Pipeless team only. Use the `list available-plugins` commands to see a complete list of registered plugins.
 
 - [Kafka](/v0/plugins/kafka/): Export events to a Kafka topic

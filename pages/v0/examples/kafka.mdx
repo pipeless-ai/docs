@@ -8,7 +8,7 @@ In this case, we are not interested on the output video since we just want to an
 
 We will do the same detections that we did on the [cats](../cats/) example, but instead of drawing the bounding box around the cat face, we will send a message to a Kafka topic to get notified that there is a cat on the video.
 
-To connect to Kafka we will use the **Pipeless Kafka Plugin** from `pipeless_ai_plugins`. This plugin is just a wrapper around the `confluent_kafka` package for a more convenient usage, but you modify the example to use any Kafka client or even replace Kafka by any event streaming platform or messaging broker. Check the whole documentation of the [Pipeless Kafka Plugin](../../plugins/src/pipeless_ai_plugins/kafka/).
+To connect to Kafka we will use the **Pipeless Kafka Plugin**. This plugin is a wrapper around the `confluent_kafka` package for a more convenient usage, but you could modify the example to use any Kafka client directly from your the hooks implementation or even replace Kafka by any event streaming platform or messaging broker. Check the whole documentation of the [Pipeless Kafka Plugin](/v0/plugins/kafka).
 
 For simplicity we have included a Kafka `docker-compose.yaml` on this same directory so you can easily start a local Kafka cluster for testing.
 
@@ -17,8 +17,6 @@ You can directly execute the example. To learn what each line of the application
 ## Requirements
 
 * Pipeless: `pip install pipeless_ai_cli`
-
-* Pipeless plugins: `pip install pipeless_ai_plugins`
 
 * OpenCV: `pip install opencv-python`
 
@@ -67,6 +65,16 @@ output:
     enable: false
 worker:
   n_workers: 1
+plugins:
+  order: 'kafka'
+```
+
+### Install the Pipeless Kafka plugin
+
+Run the following command to install the Pipeless Kafka plugin:
+
+```bash copy
+pipeless install plugin kafka
 ```
 
 ### Deploy Kafka
@@ -126,15 +134,18 @@ And that's all. Now, it is your time to complete your application by listening a
 
 ## Walkthrough
 
-This is a step by step description of what every line of the application code is doing. This time, it describes only the new lines realted to the Kafka example, to understand how the recognition model is used please check the [cats example walkthrough](/v0/examples/cats/#walkthrough).
+This is a step by step description of what every line of the application code is doing. This time, it describes only the new lines related to the Kafka example, to understand how the recognition model is used please check the [cats example walkthrough](/v0/examples/cats/#walkthrough).
 
-### Before stage
+### Extra configuration
 
-In the before state we initiate the producer connection to our Kafka cluster so we can use the producer later to send messages to the topic. Initiating the connection is realy simple thanks to the Pipeless Kafka Plugin:
+Since we want to use the Kafka plugin, after installing it, we have to specify to Pipeless the plugins execution order. To do that, the `config.yaml` contains the following lines (we are using only the kafka plugin):
 
-```python copy
-self.producer = KafkaProducer()
+```yaml copy
+plugins:
+  order: 'kafka'
 ```
+
+If we had more than one plugin, we would need to specify the comma separated list for the execution order on each stage.
 
 ### Processing stage
 
@@ -142,7 +153,9 @@ In this case, instead of editing the frame to draw a bounding box and return the
 
 ```python copy
 if len(bounding_boxes) > 0:
-    self.producer.produce('pipeless', 'There is a cat!')
+    self.plugins.kafka.produce('pipeless', 'There is a cat!')
 ```
+
+The plugin takes care of authenticating with Kafka and we just need to call the `produce` method.
 
 <Callout>The bounding boxes detection is exactly the same than on the cats example.</Callout>

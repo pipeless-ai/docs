@@ -18,5 +18,7 @@ The following is the whole list of the currently supported configuration options
 | `output.recv_buffer_size` | Size of the output socket reception buffer | `300` (int) | `PIPELESS_OUTPUT_RECV_BUFFER_SIZE` |
 | `worker.recv_buffer_size` | Size of the worker socket reception buffer | `300` (int) | `PIPELESS_WORKER_RECV_BUFFER_SIZE` |
 | `worker.n_workers` | Number of workers deployed | int | `PIPELESS_WORKER_N_WORKERS` |
+| `plugins.dir` | Custom directory for plugins | `plugins` (string) | `PIPELESS_PLUGINS_DIR` |
+| `plugins.order` | Execution order for the plugins | string | `PIPELESS_PLUGINS_ORDER` |
 
 When using remote input **and** output video URIs, Pipeless will run as daemon (it will never stop) and it will process any number of consecutive streams that appear on the remote URI.

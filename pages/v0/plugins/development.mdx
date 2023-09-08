@@ -1,0 +1,78 @@
+# Pipeless Plugin Development Guide
+
+Developing a Pipeless plugin is really simple and almost the same as developing a Pipeless application, indeed, you have to implement the `PipelessApp` class.
+
+You plugin folder must have at least the follwing two files:
+
+* `plugin.py`: the main plugin file. It **must** contain a class called `PipelessPlugin` that inherits from `PipelessApp`.
+
+* `README.md`: the plugin usage documentation.
+
+## Implementing the plugin
+
+The `PipelessPlugin` class is a special Pipeless application. You just need to take into account that any method that you define into the `PipelessPlugin` class that **is not** a Pipeless hook will be exposed to the applications that use your plugin under `self.plugins.plugin_id.method`. In this way, you can provide other Pipeless apps with some utility methods.
+
+When you implement a hook in your plugin, it will be executed **before** the hook implementation of those apps using your plugin.
+
+### Implementation Example
+
+Let's suppose we have a plugin with ID `example` and the following definition:
+
+```python copy filename="plugin.py"
+from pipeless_ai.lib.app.app import PipelessApp
+
+class PipelessPlugin(PipelessApp):
+    def process(self, frame):
+        print('Custom process before the app process')
+        return frame
+
+    def say_hello(self):
+        print('Hello!')
+```
+
+The above plugin will print `Custom process before the app process` just before running the app `process` hook and pass the frame to it. We could have done some changes to the frame, and then, an application using the plugin would receive a transformed frame.
+
+Now, to say hello from an application that uses the plugin we can use `self.plugins.example.say_hello()` anywhere in the application code.
+
+### Registering a Plugin
+
+To make your plugin available to other Pipeless users through the Pipeless CLI, you need to register it on the Pipeless plugin registry.
+
+You just need to add some metadata to a JSON file and create a GitHub Pull Request. Then, your plugin code must be publicly available on some Git repository and contain a version tag.
+
+The `plugin install` command of the Pipelesss CLI will read your plugin metadata from that JSON file and download the plugin code from the provided repo URL.
+You can specify several version entries on the metadata, each version **must** exist as a tag in the repository you provided. The Pipeless CLI will try to checkout to a tag named as the version field when downloading the plugin code.
+
+You can also provide any required dependencies, which can be other plugins, some python dependencies (they will be automatically installed with pip when installing the plugin) or some system dependencies (need to be manually installed by the user).
+
+The JSON file is located on the [Pipeless repo](https://github.com/miguelaeh/pipeless) under `cli/src/pipeless_ai_cli/plugins-registry.json`.
+
+The following is the entry used by the Pipeless Kafka plugin:
+
+```json
+{
+    "name": "Pipeless Kafka Plugin",
+    "id": "kafka",
+    "description": "Allows to produce messages to a Kafka topic",
+    "versions": [
+        {
+            "version": "plugins-kafka-0.1.0",
+            "latest": "true",
+            "repo_url": "https://github.com/miguelaeh/pipeless.git",
+            "subdir": "plugins/kafka",
+            "plugin_dependencies": [],
+            "python_dependencies": ["confluent-kafka@^2.0.0"],
+            "system_dependencies": []
+        }
+    ]
+}
+```
+
+#### Metadata considerations
+
+* ID: **must** contain alphanumeric characters and underscores (`_`) only.
+* The provided version **must** exist **as a tag** on the repository pointed by the `repo_url`.
+* You can mark the latest version with `"latest": true`.
+* The Python dependencies will be automatically installed when installing the pluging. Each dependency can contain a specify version or the `^` version specifier.
+* Plugin dependencies. (The automatic installation of plugin dependencies is not yet implemented, but should add them as metadata for the future).
+* System dependencies: These dependencies will be shown when installing your plugin so the user can manually install them.

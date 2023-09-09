@@ -2,7 +2,7 @@
 
 Pipeless has a built in plugin system. Anyone can create and register plugins for common tasks such as producing events to Kafka, skipping image processing when they are similar, etc.
 
-Pipeless also has a plugins registry to make it easy for you to manage plugins in your project. You can list all the available plugins in registry by running:
+Pipeless also has a plugin registry to make it easy for you to manage plugins in your project. You can list all the available plugins in registry by running:
 
 ```bash copy
 pipeless list available-plugins
@@ -28,7 +28,7 @@ A plugin is a piece of code that extends the behaviour of the Pipeless hooks out
 
 When a plugin adds extra methods to the application, you can access them via `self.plugins.plugin_id.method` within your implementation of the `App` class.
 
-The `plugin_id` is the ID of the plugin in the plugins registry, which is easy to obtain with the `list` command.
+The `plugin_id` is the ID of the plugin in the plugin registry, which is easy to obtain with the `list` command.
 
 ### Extended hooks
 

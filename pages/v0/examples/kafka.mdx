@@ -145,9 +145,9 @@ plugins:
   order: 'kafka'
 ```
 
-If we had more than one plugin, we would need to specify the comma separated list for the execution order on each stage.
+If we had more than one plugin, we would need to specify the comma separated list for the execution order.
 
-### Processing stage
+### Processing the stream
 
 In this case, instead of editing the frame to draw a bounding box and return the modified video frame like we did on the original cats example, we simply identify the bounding box and, if there is a bounding box, we send a message to the `pipeless` kafka topic:
 

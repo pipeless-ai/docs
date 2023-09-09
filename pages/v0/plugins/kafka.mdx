@@ -3,21 +3,18 @@
 This plugin makes easy to connect to a Kafka cluster using Pipeless.
 It works as a Kafka producer to send information to Kafka topics that can later be used to take actions on events.
 
-## Simple usage
+## Install the plugin
 
-Initialize the producer within the `before` stage:
-
-```python copy
-...
-def before(self):
-    self.producer = KafkaProducer()
-...
+```bash
+pipeless install plugin kafka
 ```
 
-Send information to a Kafka topic at any stage:
+## Usage
 
-```python copy
-self.producer.produce('pipeless', 'hello!')
+You can call `produce` to send information to a topic from any Pipeless hook. For example, to send `hello!` to the `pipeless` topic:
+
+```python
+self.plugins.kafka.produce('pipeless', 'hello!')
 ```
 
 ## Configuration
@@ -40,3 +37,4 @@ Sends information to a Kafka topic. Supports the following parameters:
 - `key` (srt|bytes): optional. Message key
 - `partition` (int): optional. Partition to produce to
 - `on_delivery` (err,msg)(function): optional. Callback to call after success or failed delivery
+

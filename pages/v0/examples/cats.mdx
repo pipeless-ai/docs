@@ -82,22 +82,22 @@ mpv cats-output.mp4
 
 This is a step by step description of what every line of the application code is doing.
 
-### Before stage
+### Before hook
 
 In order to recognise cats we need to load a model trained for that purpose.
-Since we want to load the model before any frame is processed, we do it within the `before` stage (method).
+Since we want to load the model before any frame is processed, we do it within the `before` hook.
 
 ```python copy
 self.xml_data = cv2.CascadeClassifier('cats.xml')
 ```
 
-We store the model as a class variable in order to have access to it from other stages.
+We store the model as a class variable in order to have access to it from other hooks.
 
-### Process stage
+### Process hook
 
 We will do basic processing here in order to recognise cat faces on the frames and draw a square around them.
 
-First, we get a reference to the model within the `before` stage:
+First, we get a reference to the model within the `before` hook:
 
 ```python copy
 model = self.xml_data

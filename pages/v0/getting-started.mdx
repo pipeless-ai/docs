@@ -2,6 +2,8 @@
 
 Let's take a look at how to create a Pipeless project, the files it contains and how to use them. Make sure to have Pipeless and its requirements installed before continue.
 
+import { Callout } from 'nextra/components'
+
 ## Create a Project
 
 Run the following command:
@@ -20,32 +22,37 @@ The `create project` command will create a directory with the name of the projec
 
 The processing steps are defined as methods of the `App` class. Pipeless loads the hooks you implement and it executes them at the proper time. All of them are optional, you just need to implement those required by your use case.
 
-### Initial and Final Stages
+### Before and After Hooks
 
 These are executed just once per stream. They are tipically used when your app requires to execute some code before starting the processing of a stream or once the stream reaches its end.
 
 - `before`: contains code that is executed before processing any content from a stream
 - `after`: contains code that is executed after reaching the end of a stream.
 
-### Processing Stages
+### Processing Hooks
 
-These are the stages that actually modify/analyze/process the multimedia streams. All of them receive a frame and **must** return a frame (even if it is the same frame without modifications). The frames can be of any type(audio, video, text, metadata, ...).
+These are the hooks that actually modify/analyze/process the multimedia streams. All of them receive a frame and **must** return a frame (even if it is the same frame without modifications). The frames can be of any type(audio, video, text, metadata, ...).
 
 - `pre_process`: code to execute to prepare a frame to be processed
 - `process`: code for the actual frame processing
 - `post-process`: code to execute after a frame is processed
 
-These stages have been defined for a proper logical code structure.
+Right now, there are no significant differences between these hooks, they are invoked in order piping their outputs and simply exist to help creating a logical code structure in your application.
 
 ### App internal state
 
-The application maintains its own internal state. This is useful when you need to pass information between stages.
+The application maintains its own internal state. This is useful when you need to pass information between hooks or between the processing of consecutive frames.
 
 Simply use class variables within the `App` class.
 
 ```python copy
 self.some_variable = "some_value"
 ```
+
+<Callout>
+Please note that when deploying several workers each worker will execute an instance of your application, with different internal states.
+The frames will be distributed using a round robin schedule, so consecutive frames on the media stream won't be processed within the same application instance.
+</Callout>
 
 ## Running the App
 
@@ -68,7 +75,7 @@ where `<component>` must be one of `input`, `worker`, `output` or `all` (default
 Pipeless has been designed for easy local and edge execution but also, to easily deploy to the cloud. Thus, it is split in 3 main components:
 
 * `input`: Receives the media streams, demux and decode the streams.
-* `worker`: Receives raw media frames, and processes them according to the user app. You can deploy any number of workers and the processing will be load balanced automatically using a round robin schedule. When deployed to the cloud this allows to reach **real time** processing even with each frame takes relatively long times to process. Note in that case, that each worker executes the `before` and `after` stages and that each worker has a different instance of the running application.
+* `worker`: Receives raw media frames, and processes them according to the user app. You can deploy any number of workers and the processing will be load balanced automatically using a round robin schedule. When deployed to the cloud this allows to reach **real time** processing even with each frame takes relatively long times to process. Note in that case, that each worker executes the `before` and `after` hooks and that each worker has a different instance of the running application.
 * `output` (optional): Receives the processed raw media frames, encodes and mux them into the proper container format for the output protocol provided by the user
 
 Each component runs with independence of the others.

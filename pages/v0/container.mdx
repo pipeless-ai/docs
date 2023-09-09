@@ -2,6 +2,8 @@
 
 The container images provide a way to run Pipeless out-of-the box without having to deal with dependencies and also makes really easy to deploy Pipeless to the cloud.
 
+import { Callout } from 'nextra/components'
+
 ## Image Usage
 
 Print help command:
@@ -13,8 +15,12 @@ docker run --rm miguelaeh/pipeless --help
 Create a new project locally:
 
 ```bash copy
-docker run --rm -v /your/app/dir:/app miguelaeh/pipeless create project my_app_name
+docker run --rm -v /your/app/parent/dir:/app miguelaeh/pipeless create project my_app_name
 ```
+<Callout>
+Note you must mount as volume the application parent dir when creating the project since a new folder will be generated for your application.
+The rest of the commands take the actual application directory.
+</Callout>
 
 Run all components:
 

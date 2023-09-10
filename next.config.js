@@ -4,7 +4,7 @@ const withNextra = require('nextra')({
 })
 
 module.exports = withNextra({
-	assetPrefix: process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ? '/docs' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/docs' : '',
   webpack(config) {
     const allowedSvgRegex = /components\/icons\/.+\.svg$/
 

@@ -4,18 +4,7 @@ const withNextra = require('nextra')({
 })
 
 module.exports = withNextra({
-  async rewrites() {
-    if (process.env.NEXT_PUBLIC_VERCEL_ENV === 'production')
-      return [
-        {
-          source: '/_next/:path*',
-          destination: 'https://pipeless.ai/docs/_next/:path*',
-        },
-      ]
-    else
-      return []
-  },
-  assetPrefix: process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ? '/docs' : '',
+	assetPrefix: process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ? '/docs' : '',
   webpack(config) {
     const allowedSvgRegex = /components\/icons\/.+\.svg$/
 

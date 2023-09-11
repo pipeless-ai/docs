@@ -1,4 +1,6 @@
 {
   "development": "Plugin development guide",
-  "kafka": "Kafka Plugin"
+  "kafka": "Kafka Plugin",
+  "yolov8": "YOLOv8 plugin",
+  "draw": "Drawing Plugin"
 }

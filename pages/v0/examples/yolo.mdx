@@ -1,0 +1,148 @@
+# YOLOv8 - detection, segmentation and pose estimation with Pipeless
+
+
+This example makes use of the Pipeless YOLOv8 plugin to perform object detection, segmentation and pose estimation, everything at the same time.
+
+Depending on the YOLO model you specify, it will perform object detection only, object detection plus image segmentation or human pose estimation.
+
+The results are drawn over the frames using the Pipeless Drawing Plugin to demonstrate its usage.
+
+You can directly execute the example. To learn what each line of the application does on the [walkthrough section](#walkthrough).
+
+You can check the whole documentation of the plugins used at:
+
+* [YOLOv8 Plugin](https://pipeless.ai/docs/v0/plugins/yolov8)
+* [Drawing plugin](https://pipeless.ai/docs/v0/plugins/draw)
+
+import { Steps, Callout } from 'nextra/components';
+
+## Requirements
+
+* Pipeless: `pip install pipeless_ai_cli`
+
+* Pipeless YOLOv8 plugin: `pipeless install plugin yolov8`
+
+* Pipeless Drawing plugin: `pipeless install plugin draw`
+
+<Callout>
+    If you don't have the required dependencies for Pipeless installed check the [installation guide](/v0/install) or [use Docker](/v0/install#using-docker-) instead.
+</Callout>
+
+## Run the example
+
+<Steps>
+### Clone the repo
+
+```bash copy
+git clone https://github.com/miguelaeh/pipeless
+cd pipeless
+```
+
+### Move to the `examples/yolo` directory
+
+``` bash copy
+cd examples/yolo
+```
+
+### Configure your input and output (optional)
+
+This example reads from your webcam and shows the content on the screen by default. If you prefer to use input and output files or remote URIs update `config.yaml`. When using local files paths **must be absolute**. the lines you would need to edit (not mandatory):
+
+```yaml {7,15}filename="config.yaml"
+input:
+  address:
+    host: localhost
+    port: 1234
+  video:
+    enable: true
+    uri: v4l2
+log_level: INFO
+output:
+  address:
+    host: localhost
+    port: 1237
+  video:
+    enable: true
+    uri: screen
+plugins:
+  order: 'yolov8,draw'
+worker:
+  n_workers: 1
+```
+
+### Configure the YOLOv8 model to use (optional)
+
+The model is automatically downloaded when you run your Pipeless application. By default, the `yolov8n.pt` detection model is loaded. To change the default model simply export the `PIPELESS_PLUGIN_YOLOV8_MODEL` environment variable.
+
+You need to provide the model with the filename notation, for example:
+
+    * `yolov8n.pt` (default)
+    * `yolov8n-seg.pt`
+    * `yolov8l-cls.pt`
+    * `yolov8x-pose.pt`
+
+The whole list of available YOLOv8 models can be found [here](https://github.com/ultralytics/ultralytics#models)
+
+For example:
+
+```bash copy
+export PIPELESS_PLUGIN_YOLOV8_MODEL="yolov8n-seg.pt"
+```
+
+### Configure the drawing confidende threshold (optional)
+
+By default, the Pipeless drawing plugin will draw over the frames all the data you pass to it. However, for convenienve it supports a confidence threshold parameter that allows you to filter data that is under the confidence thredshold.
+
+If you want to set the thredshold, for example to `0.85` run the following:
+
+```bash copy
+export PIPELESS_PLUGIN_DRAW_CONFIDENCE_THRESHOLD=0.85
+```
+
+### Run the application
+
+Simply execute:
+
+```bash copy
+pipeless run
+```
+
+### Visualize the output
+
+A window will be opened to show you the results on the screen.
+
+In case you modified the `output.uri` to a local file, you can use any video player to see the results. For example:
+
+```bash copy
+mpv your_custom_path.mp4
+```
+
+</Steps>
+
+## Walkthrough
+
+This is a step by step description of what every line of the application code is doing.
+
+### Process hook
+
+We are only implementing the `process` hook this time. The YOLOv8 plugin automatically executes the model and makes the data available to our application, and we simply need to take it and pass it to the drawing plugin.
+
+```python copy
+for box in self.plugins.yolov8.bounding_boxes:
+    x1, y1, x2, y2, score, class_number = box
+    label_string = self.plugins.yolov8.label_from_number(class_number)
+    self.plugins.draw.boxes.append([x1, y1, x2, y2, label_string, score, (0, 255, 255)])
+```
+
+In the above code, `self.plugins.yolov8` contains all the data that the plugin is creating when executing the model over the frame. In the above code, we take the bounding boxes, convert the box label (that by default is a number) into a string (for example `person`, `chair`, etc) and provide it as input to the drawing plugin.
+
+To provide bounding boxes to the drawing plugin we just need to add our bounding boxes to the `self.plugin.draw.boxes` array.
+
+```python copy
+self.plugins.draw.masks = self.plugins.yolov8.masks_data
+self.plugins.draw.keypoints = self.plugins.yolov8.keypoints
+```
+
+Finally, we simply forward the YOLO segmentation result and pose estimation result into the drawing plugin so it can draw segmentation masks and keypoints over our frame.
+
+And that's all! This is the power of the Pipeless extensibility! With just 6 lines of code, we created a fully functional application that recognizes objects, segments the image and even estimates people's pose.

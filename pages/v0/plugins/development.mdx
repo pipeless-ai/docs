@@ -14,6 +14,10 @@ The `PipelessPlugin` class is a special Pipeless application. You just need to t
 
 When you implement a hook in your plugin, it will be executed **before** the hook implementation of those apps using your plugin.
 
+When creating a plugin, you must be aware of an important difference between the how the plugin `__init__` method and `before` hook are executed.
+The **`__init__`** method is invoked **before marking the worker as ready**. This allows you to perform actions that take some time without lossing frames, such as downloading files, connecting to external services, etc.
+The **`before`** hook is called **before the first frame of each stream**. Within the `before` hook you can implement, for example, logic to reset the plugin state before each new stream.
+
 ### Implementation Example
 
 Let's suppose we have a plugin with ID `example` and the following definition:

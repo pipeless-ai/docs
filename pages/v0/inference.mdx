@@ -59,6 +59,16 @@ You can also access the original frame within any processing hook using `self.or
 
 ## Troubleshooting
 
+### cudaErrorNoKernelImageForDevice
+
+You may find a message like the following when CUDA was not compiled for your target GPU architecture:
+
+```
+Status Message: CUDA error cudaErrorNoKernelImageForDevice:no kernel image is available for execution on the device
+```
+
+Consider building CUDA yourself or using a different GPU. This error has been reported in some Nvidia 940MX (Maxwell architecture).
+
 ### Seems to get stuck
 
 If running `pipeless run` using the ONNX inference it seems to get stuck and there is not a clear error shown, try running the worker only to see the error with `pipeless run worker`.

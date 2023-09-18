@@ -2,6 +2,11 @@
 
 The container images provide a way to run Pipeless out-of-the box without having to deal with dependencies and also makes really easy to deploy Pipeless to the cloud.
 
+We provide several images:
+
+* `miguelaeh/pipeless:{version}` or `latest`: Default image with enough dependencies to play and test Pipeless on CPU.
+* `miguelaeh/pipeless:{version}-cuda`: Image to run Pipeless with CUDA support for running inference. When using this image you need to install the Nvidia Container Toolkit on your system.
+
 import { Callout } from 'nextra/components'
 
 ## Image Usage
@@ -32,6 +37,37 @@ Run input only:
 
 ```bash copy
 docker run --rm miguelaeh/pipeless run input
+```
+
+### GPU usage with CUDA
+
+Use the image `miguelaeh/pipeless:latest-cuda`. To properly use CUDA inside the container, your host system needs to have `nvidia-container-toolkit` installed. Run the following commands to install it:
+
+```bash
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+  && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+    sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list \
+  && \
+    sudo apt-get update
+```
+
+Then restart the docker daemon to load the toolkit:
+
+```bash
+systemctl restart docker
+```
+
+Finally, run the image by providing the `--gpus all` option:
+
+```bash
+docker run --gpus all -v /your/app/dir:/app  miguelaeh/pipeless:latest-cuda run 
+```
+
+To verify the image is recognizing the GPU, check on the logs if the Pipeless worker is showing `CUDAExecutionProvider` as an available provider. Alternatively, you can check it with the `nvidia-smi` command as follows:
+
+```bash
+docker run --gpus all --entrypoint nvidia-smi miguelaeh/pipeless:latest-cuda
 ```
 
 ### Install Custom Python Packages

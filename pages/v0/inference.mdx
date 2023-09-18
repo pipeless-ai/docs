@@ -71,7 +71,9 @@ In this case you usually get a warning like:
 [W:onnxruntime:Default, onnxruntime_pybind_state.cc:640 CreateExecutionProviderInstance] Failed to create CUDAExecutionProvider. Please reference https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html#requirements to ensure all dependencies are met.
 ```
 
-Ensure you have the proper CUDA and Cudnn versions installed. Check the [ONNX CUDA requirements](https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html) to ensure your versions are compatible.
+Ensure you have the proper CUDA and Cudnn versions installed. Check the [ONNX CUDA requirements](https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html) to ensure your versions are compatible. We recommend using CUDA version `11.7` since `12.X` is not properly recognized by the latest version of the ONNX Runtime.
+
+Optionally, you can use the Pipeless CUDA container image. Find the docs [here](/v0/container).
 
 ### Segmentation fault (core dumped)
 

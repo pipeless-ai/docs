@@ -63,6 +63,16 @@ You can also access the original frame within any processing hook using `self.or
 
 If running `pipeless run` using the ONNX inference it seems to get stuck and there is not a clear error shown, try running the worker only to see the error with `pipeless run worker`.
 
+### I have CUDA and Cudnn installed but ONNX Runtime is not using CUDA
+
+In this case you usually get a warning like:
+
+```
+[W:onnxruntime:Default, onnxruntime_pybind_state.cc:640 CreateExecutionProviderInstance] Failed to create CUDAExecutionProvider. Please reference https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html#requirements to ensure all dependencies are met.
+```
+
+Ensure you have the proper CUDA and Cudnn versions installed. Check the [ONNX CUDA requirements](https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html) to ensure your versions are compatible.
+
 ### Segmentation fault (core dumped)
 
 The most common error that leads to a segmentation fault is to provide wrong input data to the model. Double check that what your `pre-process` hook is returning follows the model input format (previous to the automatic transformations mentioned above).

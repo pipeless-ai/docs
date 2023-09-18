@@ -2,6 +2,7 @@
     "index": "Index",
     "install": "Installation",
     "getting-started": "Getting Started",
+    "inference": "Inference with ONNX runtime",
     "container": "Container images",
     "configuration": "Configuration Options",
     "formats": "Stream Formats and Protocols",

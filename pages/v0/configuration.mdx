@@ -10,8 +10,8 @@ When using remote input **and** output video URIs, Pipeless will run as daemon (
 
 The following is the whole list of the currently supported configuration options:
 
-| Option | Description | Value(s)/Type | Env Var |
-| ------ | ----------- | ------------- | ------- |
+| Option | Description | Default Value / Type | Env Var |
+| ------ | ----------- | -------------------- | ------- |
 | `log_level` | Level of the logging|  `DEBUG`, `INFO`, `WARN`, `ERROR` | `PIPELESS_LOG_LEVEL` |
 | `input.address.host` | Host where the input component is running | `localhost` (string) | `PIPELESS_INPUT_ADDRESS_HOST` |
 | `input.address.port` | Port of the input component process | `1234` (int) | `PIPELESS_INPUT_ADDRESS_PORT` |
@@ -25,6 +25,14 @@ The following is the whole list of the currently supported configuration options
 | `worker.recv_buffer_size` | Size of the worker socket reception buffer | `300` (int) | `PIPELESS_WORKER_RECV_BUFFER_SIZE` |
 | `worker.n_workers` | Number of workers deployed | int | `PIPELESS_WORKER_N_WORKERS` |
 | `worker.show_exec_time` | Print the time that your Pipeless application takes to run per frame. Usefull to calculate the number of workers to deploy. | `false` (bool) | `PIPELESS_WORKER_SHOW_EXEC_TIME` |
+| `worker.inference.model_uri` | URI of the model to load into the ONNX Runtime. Providing this option enables the ONNX runtime automatically. | string | `PIPELESS_WORKER_INFERENCE_MODEL_URI` |
+| `worker.inference.pre_process_model_uri` | URI of the model to load into the ONNX Runtime. Providing this option enables the ONNX runtime automatically. | `None` (string) | `PIPELESS_WORKER_INFERENCE_PRE_PROCESS_MODEL_URI` |
+| `worker.inference.force_opset_version` | Automatically converts the model to the specified Operation Set version | `None` (number) | `PIPELESS_WORKER_INFERENCE_FORCE_OPSET_VERSION` |
+| `worker.inference.force_ir_version` | Automatically converts the model to the specified Intermediate Representation version | `None` (number) | `PIPELESS_WORKER_INFERENCE_FORCE_IR_VERSION` |
+| `worker.inference.image_shape_format` | Specifies the order of the model input image shape parameters to automatically transpose frames. Example: `height,width,channels` | `None` (string) | `PIPELESS_WORKER_INFERENCE_IMAGE_SHAPE_FORMAT` |
+| `worker.inference.image_width` | Indicate the expected model input image width when Pipeless is unable to detect it automatically. | `None` (number) | `PIPELESS_WORKER_INFERENCE_IMAGE_WIDTH` |
+| `worker.inference.image_height` | Indicate the expected model input image height when Pipeless is unable to detect it automatically. | `None` (number) | `PIPELESS_WORKER_INFERENCE_IMAGE_HEIGHT` |
+| `worker.inference.image_channels` | Indicate the expected model input image channels when Pipeless is unable to detect it automatically. | `None` (number) | `PIPELESS_WORKER_INFERENCE_IMAGE_CHANNELS` |
 | `plugins.dir` | Custom directory for plugins | `plugins` (string) | `PIPELESS_PLUGINS_DIR` |
 | `plugins.order` | Execution order for the plugins | string | `PIPELESS_PLUGINS_ORDER` |
 

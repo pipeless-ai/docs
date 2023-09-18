@@ -22,6 +22,8 @@ The `create project` command will create a directory with the name of the projec
 
 The processing steps are defined as methods of the `App` class. Pipeless loads the hooks you implement and it executes them at the proper time. All of them are optional, you just need to implement those required by your use case.
 
+Also, Pipeless ships the ONNX Runtime to execute inference out-of-the-box when you provide a model URI in the configuration. It works for both CPU (default) and GPU when available in your system. For GPU we currently support CUDA and TensorRT execution providers.
+
 ### Before and After Hooks
 
 These are executed just once per stream. They are tipically used when your app requires to execute some code before starting the processing of a stream or once the stream reaches its end.
@@ -37,7 +39,9 @@ These are the hooks that actually modify/analyze/process the multimedia streams.
 - `process`: code for the actual frame processing
 - `post-process`: code to execute after a frame is processed
 
-Right now, there are no significant differences between these hooks, they are invoked in order piping their outputs and simply exist to help creating a logical code structure in your application.
+<Callout>
+When you provide a model URI in the config, the ONNX Runtime will be used to automatically run inference using the provided model. In this case, the `process` hook cannot be implemented since the processing is equivalent to running inference. You will be able to implement the rest of the hooks.
+</Callout>
 
 ### App internal state
 
@@ -48,6 +52,8 @@ Simply use class variables within the `App` class.
 ```python copy
 self.some_variable = "some_value"
 ```
+
+In all the processing hooks you will be able to access `self.original_frame`, which contains the original frame, useful in those cases when you nned to modify the frame provided in the hook parameters. An example of this is to draw inference results from the ONNX Runtime since you will probably need to pre-process the input frame to match the model input format, lossing the original frame, that will later need to post-process the inference results.
 
 <Callout>
 Please note that when deploying several workers each worker will execute an instance of your application, with different internal states.

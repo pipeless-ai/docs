@@ -23,7 +23,7 @@ This plugin accepts the following configuration env vars:
 To pass data to this plugin you just need to set some variables in your Pipeless application.
 
 <Callout>
-IMPORTANT: this plugin implements the `post-process` hook, thus, you must pass data before the `post-process` hook, i.e. during your `pre-process` or `process` hooks.
+IMPORTANT: this plugin implements the `after_post-process` hook, this means you can pass data to it, and modify the input, on any hook of your application.
 </Callout>
 
 ### Bounding Boxes

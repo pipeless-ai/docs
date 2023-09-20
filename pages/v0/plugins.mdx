@@ -2,7 +2,7 @@
 
 Pipeless has a built in plugin system. Anyone can create and register plugins for common tasks such as producing events to Kafka, skipping image processing when they are similar, etc.
 
-Pipeless also has a plugin registry to make it easy for you to manage plugins in your project. You can list all the available plugins in registry by running:
+The plugins are registered within the Pipeless plugin registry making it easy for you to manage plugins in your project. You can list all the available plugins in registry by running:
 
 ```bash copy
 pipeless list available-plugins
@@ -20,32 +20,25 @@ You can override the plugin installation directory providing `--plugins-root <yo
 
 ## How plugins works
 
-When running Pipeless, the worker loads all the plugins under the `plugins` folder of the application directory. You can override the plugins directory path using the `plugins.dir` configuration option or exporting the `PIPELESS_PLUGINS_DIR` environment variable.
+The Pipeless worker loads all the plugins under the `plugins` folder of the application directory before running the application. You can override the plugins directory path using the `plugins.dir` configuration option or exporting the `PIPELESS_PLUGINS_DIR` environment variable.
 
-A plugin is a piece of code that extends the behaviour of the Pipeless hooks out-of-the box and/or embeeds some extra methods/utilities that you can call from your Pipeless application.
+Plugins are entities that inject code into your application to perform actions out of the box. From your application code you can communicate with a plugin via variables to pass or receive information to/from it. You can access those variables under `self.plugins.<plugin_id>` in your application code. Finally, a plugin can also register util methods in your application that you can invoke to perfrom some pre-defined action.
 
 ### Extra methods
 
-When a plugin adds extra methods to the application, you can access them via `self.plugins.plugin_id.method` within your implementation of the `App` class.
+When a plugin adds extra methods to the application, you can access them via `self.plugins.plugin_id.method`.
 
-The `plugin_id` is the ID of the plugin in the plugin registry, which is easy to obtain with the `list` command.
+The `plugin_id` is the ID of the plugin in the plugin registry, which is easy to obtain with the `pipeless list plugins` command.
 
 ### Extended hooks
 
-A plugin that extends some application hook executes code **before** your code for that hook. For example, if you add some code to the `process` hook and you installed a plugin that also adds code to the `process` hook, the plugin code gets executed before your code. In this way, a plugin could, for example, make some changes to a frame before the frame arrives your code.
+A plugin that extend your application hooks and execute code before your hook or after it. For example, if the plugin executes code before your hook, it can modify the frame that your hook will receive or it can pass some other values via variables that you can use on the hook implementation. On the other hand, if the plugin executes code after your hook, they typically receive some parameters that you can pass simply by setting a variable in your hook code, or the plugin could perform some final modifications to the frame, saving you some work.
 
 ## Plugins execution
 
-The plugins are loaded and executed in order by the Pipeless worker. Thus, you **must** provide the execution order in your configuration via the `plugins.order` option in the `config.yaml` or by exporting `PIPELESS_PLUGINS_ORDER`.
-Simply add a list that can be separated by commas (`,`), semi-colons (`;`) or vertical bars (`|`).
+The plugins are loaded and executed in order by the Pipeless worker. Thus, you **must** provide the execution order in your configuration via the `plugins.order` option in the `config.yaml` or by exporting `PIPELESS_PLUGINS_ORDER`. Simply add a list that can be separated by commas (`,`), semi-colons (`;`) or vertical bars (`|`).
 
-As an example, let's imagine you installed two plugins and that both implement the `process` hook. If we add the execution order as `plugin_1,plugin_2` the flow will the be following:
-
-1. The `before` hook will be executed as always, if defined.
-1. The `pre-process` hook will be executed as always, if defined.
-1. The `process` hook will execute the implementation of plugin_1's `process` hook, then pipe the frame to plugin_2's `process` hook and then pipe the frame to your application's `process` hook.
-1. The `post-process` hook will be executed as always, if defined.
-1. The `after` hook will be executed as always, if defined.
+They are executed in order because the output of a plugin may not be suitable for the input of another, thus, specifying an orther you are in charge of chaining plugins that are compatible with each other.
 
 ## List of official plugins
 

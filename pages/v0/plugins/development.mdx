@@ -1,32 +1,51 @@
 # Pipeless Plugin Development Guide
 
-Developing a Pipeless plugin is really simple and almost the same as developing a Pipeless application, indeed, you have to implement the `PipelessApp` class.
+Developing a Pipeless plugin is really simple and almost the same as developing a Pipeless application. In this case you have to implement the `PipelessPlugin` class.
 
 Your plugin folder must have at least the follwing two files:
 
-* `plugin.py`: the main plugin file. It **must** contain a class called `PipelessPlugin` that inherits from `PipelessApp`.
+* `plugin.py`: the main plugin file. It **must** contain a class called `Plugin` that inherits from `PipelessPlugin`.
 
 * `README.md`: the plugin usage documentation.
 
 ## Implementing the plugin
 
-The `PipelessPlugin` class is a special Pipeless application. You just need to take into account that any method that you define into the `PipelessPlugin` class that **is not** a Pipeless hook will be exposed to the applications that use your plugin under `self.plugins.plugin_id.method`. In this way, you can provide other Pipeless apps with some utility methods.
+You can see the `PipelessPlugin` class as a special Pipeless application. The only differences are that it uses different hook names and that any method that you define within the `Plugin` class that **is not** a plugin hook will be exposed to the end user application under `self.plugins.plugin_id.method`. In this way, you can provide other Pipeless apps with some utility methods.
 
-When you implement a hook in your plugin, it will be executed **before** the hook implementation of those apps using your plugin.
+The hooks that you can implement are the same hooks than a normal Pipeless application but prefixed by `before` or `after`, indicating that the plugin hook will run before or after the actual application
+hook.
 
-When creating a plugin, you must be aware of an important difference between the how the plugin `__init__` method and `before` hook are executed.
-The **`__init__`** method is invoked **before marking the worker as ready**. This allows you to perform actions that take some time without lossing frames, such as downloading files, connecting to external services, etc.
-The **`before`** hook is called **before the first frame of each stream**. Within the `before` hook you can implement, for example, logic to reset the plugin state before each new stream.
+This allows your plugin to either receive some dynamic inputs from the end user application (when running after) or pass some values to the end user application (when running before).
+
+Futhermore, just like when implementing a Pipeless application, the plugin hooks must return a frame, which will be the frame that the user application hook receives as parameter.
+
+The following is the list of hooks that you can implement on a plugin:
+
+1. `before_before`
+1. `after_before`
+1. `before_pre_process`
+1. `after_pre_process`
+1. `before_post_process`
+1. `after_post_process`
+1. `before_after`
+1. `after_after`
+
+### `before_before` and `after_before` vs `__init__`
+
+Be aware of an important difference between how the plugin `__init__` method and `xxx_before` hooks are executed:
+
+* The **`__init__`** method is invoked **only once** per worker and **before marking the worker as ready**. This allows you to perform some preparation actions, such as downloading required files, open connections to external services, etc.
+* The **`xxx_before`** hooks are called **before the first frame of each stream**. Within the `xxx_before` hooks you can implement, for example, logic to reset the plugin state before each new stream.
 
 ### Implementation Example
 
 Let's suppose we have a plugin with ID `example` and the following definition:
 
 ```python copy filename="plugin.py"
-from pipeless_ai.lib.app.app import PipelessApp
+from pipeless_ai.lib.app.plugin import PipelessPlugin
 
-class PipelessPlugin(PipelessApp):
-    def process(self, frame):
+class Plugin(PipelessPlugin):
+    def before_process(self, frame):
         print('Custom process before the app process')
         return frame
 
@@ -36,7 +55,7 @@ class PipelessPlugin(PipelessApp):
 
 The above plugin will print `Custom process before the app process` just before running the app `process` hook and pass the frame to it. We could have done some changes to the frame, and then, an application using the plugin would receive a transformed frame.
 
-Now, to say hello from an application that uses the plugin we can use `self.plugins.example.say_hello()` anywhere in the application code.
+Now, to say hello from an application that uses the plugin we can use `self.plugins.example.say_hello()` within the application `process` hook.
 
 ### Registering a Plugin
 

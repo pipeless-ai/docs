@@ -1,13 +1,12 @@
 # YOLOv8 - detection, segmentation and pose estimation with Pipeless
 
-
 This example makes use of the Pipeless YOLOv8 plugin to perform object detection, segmentation and pose estimation, everything at the same time.
 
 Depending on the YOLO model you specify, it will perform object detection only, object detection plus image segmentation or human pose estimation.
 
 The results are drawn over the frames using the Pipeless Drawing Plugin to demonstrate its usage.
 
-You can directly execute the example. To learn what each line of the application does on the [walkthrough section](#walkthrough).
+You can directly execute the example following the steps below or learn what each line of the application does in the the [walkthrough section](#walkthrough).
 
 You can check the whole documentation of the plugins used at:
 
@@ -48,7 +47,7 @@ cd examples/yolo
 
 This example reads from your webcam and shows the content on the screen by default. If you prefer to use input and output files or remote URIs update `config.yaml`. When using local files paths **must be absolute**. the lines you would need to edit (not mandatory):
 
-```yaml {7,15}filename="config.yaml"
+```yaml {7,15} filename="config.yaml"
 input:
   address:
     host: localhost

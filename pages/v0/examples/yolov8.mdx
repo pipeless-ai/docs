@@ -1,5 +1,11 @@
 # YOLOv8 - detection, segmentation and pose estimation with Pipeless
 
+import { Steps, Callout } from 'nextra/components';
+
+<Callout>
+This example uses the YOLOv8 SDK. The Pipeless worker is now shipping a [built-in ONNX Runtime](/v0/inference) and we recommend to stick to it, which will help you creating lighter applications and run them on GPUs out fo the box. That said, nothing prevents you from loading frameworks on your Pipeless application.
+</Callout>
+
 This example makes use of the Pipeless YOLOv8 plugin to perform object detection, segmentation and pose estimation, everything at the same time.
 
 Depending on the YOLO model you specify, it will perform object detection only, object detection plus image segmentation or human pose estimation.
@@ -12,8 +18,6 @@ You can check the whole documentation of the plugins used at:
 
 * [YOLOv8 Plugin](https://pipeless.ai/docs/v0/plugins/yolov8)
 * [Drawing plugin](https://pipeless.ai/docs/v0/plugins/draw)
-
-import { Steps, Callout } from 'nextra/components';
 
 ## Requirements
 

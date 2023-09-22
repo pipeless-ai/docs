@@ -4,8 +4,9 @@ The container images provide a way to run Pipeless out-of-the box without having
 
 We provide several images:
 
-* `miguelaeh/pipeless:{version}` or `latest`: Default image with enough dependencies to play and test Pipeless on CPU.
+* `miguelaeh/pipeless:{version}`: Default image with enough dependencies to play and test Pipeless on CPU.
 * `miguelaeh/pipeless:{version}-cuda`: Image to run Pipeless with CUDA support for running inference. When using this image you need to install the Nvidia Container Toolkit on your system.
+* `miguelaeh/pipeless:{version}-tensorrt`: Image to run Pipeless using TensorRT based GPUs. When using this image you need to install the Nvidia Container Toolkit on your system.
 
 import { Callout } from 'nextra/components'
 

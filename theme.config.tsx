@@ -4,7 +4,7 @@ import { DocsThemeConfig } from 'nextra-theme-docs'
 import { BsTwitter } from 'react-icons/bs';
 
 const config: DocsThemeConfig = {
-  logo: <span style={{display: "flex", alignItems: "center"}}><Image alt="logo" width={30} height={30} src="/logo-400x400-rounded.png" />&nbsp;<b>Pipeless</b></span>,
+  logo: <span style={{display: "flex", alignItems: "center"}}><Image alt="logo" width={30} height={30} src="/docs/logo-400x400-rounded.png" />&nbsp;<b>Pipeless</b></span>,
   logoLink: 'https://pipeless.ai',
   primaryHue: 297, // Equivalent to #701a75
   project: {
@@ -23,7 +23,7 @@ const config: DocsThemeConfig = {
   },
   head: (
     <>
-      <meta property="og:image" content="docs.pipeless.ai/logo-400x400-rounded.png" />
+      <meta property="og:image" content="https://www.pipeless.ai/docs/logo-400x400-rounded.png" />
       <meta property="og:title" content="Pipeless Documentation" />
       <meta property="og:description" content="Documentation about the Pipeless computer vision framework" />
     </>

@@ -25,7 +25,7 @@ You can check the whole documentation of the draw plugin at:
 * Pipeless Drawing plugin: `pipeless install plugin draw`
 
 <Callout>
-    If you don't have the required dependencies for Pipeless installed check the [installation guide](/v0/install) or [use Docker](/v0/install#using-docker-) instead.
+    If you don't have the required dependencies for Pipeless installed check the [installation guide](/docs/v0/install) or [use Docker](/docs/v0/install#using-docker-) instead.
 </Callout>
 
 ## Run the example
@@ -113,7 +113,7 @@ The normalization is a simple process to convert the image RGB pixels into value
 
 ### Post-process hook
 
-Since we are using the ONNX Runtime, the frame provided in the `post-process` hook parameters is the original frame (check the [ONNX docs page](/v0/inference) to learn why).
+Since we are using the ONNX Runtime, the frame provided in the `post-process` hook parameters is the original frame (check the [ONNX docs page](/docs/v0/inference) to learn why).
 
 We can access the inference results at `self.inference.results`, which is the output of the inference session, or what is the same, what our model returns.
 In this case, since we are performing object detection, it will be an array of bounding boxes with their respective scores and labels. The rest of the code within this hook takes care of converting that output into something we can understand as follows:

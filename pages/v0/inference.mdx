@@ -23,7 +23,7 @@ Pipeless expects your model to accept an image as input and tries to automatical
 
 Any transformation not included on the list above needs to be done by yourself by either implementing the `pre-process` hook and/or providing a pre-processing model. See the sections below about each of the options.
 
-Check the list of configuration options for the automatic pre-processing in the [configuration options list](/v0/configuration) under the `worker.inference` key.
+Check the list of configuration options for the automatic pre-processing in the [configuration options list](/docs/v0/configuration) under the `worker.inference` key.
 
 ### Adding a pre-processing model
 
@@ -83,7 +83,7 @@ In this case you usually get a warning like:
 
 Ensure you have the proper CUDA and Cudnn versions installed. Check the [ONNX CUDA requirements](https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html) to ensure your versions are compatible. We recommend using CUDA version `11.7` since `12.X` is not properly recognized by the latest version of the ONNX Runtime.
 
-Optionally, you can use the Pipeless CUDA container image. Find the docs [here](/v0/container).
+Optionally, you can use the Pipeless CUDA container image. Find the docs [here](/docs/v0/container).
 
 ### Segmentation fault (core dumped)
 

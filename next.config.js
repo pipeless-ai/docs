@@ -19,5 +19,22 @@ module.exports = withNextra({
       use: ['@svgr/webpack']
     })
     return config
-  }
+  },
+  async redirects() {
+    // The rewrite on the main site causes a duplicated /docs/docs on page reload.
+    // This redirect takes the user to the proper path
+    return [
+      {
+        // Hack to avoid too many redirections
+        source: '/docs/docs',
+        destination: 'https://www.pipeless.ai/docs',
+        permanent: true,
+      },
+      {
+        source: '/docs/docs/:path*',
+        destination: 'https://www.pipeless.ai/docs/:path*',
+        permanent: true,
+      },
+    ]
+  },
 })

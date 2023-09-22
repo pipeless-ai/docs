@@ -24,7 +24,8 @@ The following is the whole list of the currently supported configuration options
 | `output.recv_buffer_size` | Size of the output socket reception buffer | `300` (int) | `PIPELESS_OUTPUT_RECV_BUFFER_SIZE` |
 | `worker.recv_buffer_size` | Size of the worker socket reception buffer | `300` (int) | `PIPELESS_WORKER_RECV_BUFFER_SIZE` |
 | `worker.n_workers` | Number of workers deployed | int | `PIPELESS_WORKER_N_WORKERS` |
-| `worker.show_exec_time` | Print the time that your Pipeless application takes to run per frame. Usefull to calculate the number of workers to deploy. | `false` (bool) | `PIPELESS_WORKER_SHOW_EXEC_TIME` |
+| `worker.show_exec_time` | Print the processing time of each frame on within the worker. Usefull to calculate the number of workers to deploy. | `false` (bool) | `PIPELESS_WORKER_SHOW_EXEC_TIME` |
+| `worker.enable_profiler` | Print execution time of your Pipeless hooks line by line. Really useful to optimize your app. | `false` (bool) | `PIPELESS_WORKER_ENABLE_PROFILER` |
 | `worker.inference.model_uri` | URI of the model to load into the ONNX Runtime. Providing this option enables the ONNX runtime automatically. | string | `PIPELESS_WORKER_INFERENCE_MODEL_URI` |
 | `worker.inference.pre_process_model_uri` | URI of the model to load into the ONNX Runtime. Providing this option enables the ONNX runtime automatically. | `None` (string) | `PIPELESS_WORKER_INFERENCE_PRE_PROCESS_MODEL_URI` |
 | `worker.inference.force_opset_version` | Automatically converts the model to the specified Operation Set version | `None` (number) | `PIPELESS_WORKER_INFERENCE_FORCE_OPSET_VERSION` |

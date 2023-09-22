@@ -12,7 +12,7 @@ export const Index = () => {
         {
             Object.keys(meta).map((section, key) =>
                 <Card key={key} icon={<ChevronRightIcon />}
-                    title={meta[section]} href={`/v0/${section}`}
+                    title={meta[section]} href={`/docs/v0/${section}`}
                 />
             )
         }

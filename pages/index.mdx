@@ -7,20 +7,22 @@ Welcome to the Pipeless documentation!
 
 ## What is Pipeless?
 
-Pipeless is an **open-source** multimedia framework to **easily** create and deploy computer vision apps in minutes without building and maintaining multimedia pipelines. It runs either locally or in the cloud and can be easily deployed thanks to the container images.
+Pipeless is an **open-source** computer vision framework that ships all the features you need to create and deploy efficent computer vision applications that work in real-time. Just like you implement specific functions in serverless web applications, Pipeless simply requires you to implement certain hooks to process any stream from any source.
 
-You can create and deploy an application that analyzes **real-time** streams in less than 10 lines of code and just within couple minutes.
+With Pipeless, you can deploy either on edge devices or to the cloud thanks to our container images, and it also provides a built-in communication layer to boost the stream processing speed to any desired framerate out-of-the-box, by automatically distributing the frame processing without using brokers.
 
-With Pipeless you can analyze a stream, for example running inference with a Computer Vision (CV) model, and then you can export the obtained data or you can use it to edit the stream on the fly and forward it. You can even do both things at the same time 🤯!
+Pipeless provides industry-standard models that you can use out-of-the-box or easily bring your own custom model. The Pipeless worker contains a built-in ONNX Runtime allowing you to run inference using any compatible model.
 
-For example, you can build thing like this:
+Futhermore, you can easily extend the feature set thanks to the plugins system. For example, there are plugins to handle events on real-time with Kafka, use YOLOv8 models, automatically draw inference results over the original video, and many others.
+
+As an example, you can build simple things like this:
 
 <video playsInline autoPlay muted loop>
     <source src="https://pipeless.ai/cats.mp4" />
     It seems your browser doesn't support the video tag.
 </video>
 
-With just these simple lines of code:
+With just these lines of code:
 
 ```python copy filename="app.py"
 from pipeless_ai.lib.app.app import PipelessApp
@@ -33,6 +35,7 @@ class App(PipelessApp):
 
     def process(self, frame):
         model = self.xml_data
+	bounding_boxes = model.detectMultiScale(frame, minSize = (30, 30))
         for box in bounding_boxes:
             a, b, width, height = box
             cv2.rectangle(frame, (a, b), (a + width, b + height), (255, 0, 255), 2)
@@ -44,7 +47,7 @@ class App(PipelessApp):
 
 Nobody likes to read docs, so you can start by running some of the examples and checking/modifying their code. If you need more context on what is happening, you can come back to the getting started guide and learn from the basics.
 
-In the rare case in which you are one of those persons that read the docs, we hope you enjoy the guides! Any feedback on the docs is really appreciated!
+In the rare case in which you are one of those persons that read the docs, we hope you enjoy the guides! Any feedback on the docs is really appreciated! You can also contribute to the docs by clikcing on the links at the right menu.
 
 <Cards>
   <Card icon={<ChevronRightIcon />} title="Getting Started" href="/docs/v0/getting-started" />

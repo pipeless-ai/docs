@@ -2,9 +2,9 @@
 
 Let's take a look at how to create a Pipeless project, the files it contains and how to use them. Make sure to have Pipeless and its requirements installed before continue.
 
-import { Callout } from 'nextra/components'
+import { Callout, Tabs } from 'nextra/components'
 
-## Create a Project
+## Create a new project
 
 Run the following command:
 
@@ -12,17 +12,91 @@ Run the following command:
 pipeless create project my_awesome_project
 ```
 
-The `create project` command will create a directory with the name of the project containing the following files:
+The `create project` command creates a directory with the name of the project containing the following files:
 
-* `app.py`: contains your `App` class. This file contains the implementation of your processing functions. For example, throwing inference on a CV model, editing a frame, etc. Within this file you will implement the hooks in charge of procesing the media frames.
+* `app.py`: contains your `App` class. This file contains the implementation of your processing functions. For example, throwing inference on a CV model, editing a frame, etc. Within this file you will implement the hooks in charge of procesing the media frames. A;; the hooks are optional.
 
 * `config.yaml`: contains the configuration for each Pipeless component. You can also override all the configuration options via env vars starting with `PIPELESS_` followed by the option YAML path in capital letters. If defined, environment variables take precedence over the configuration file content. Find the whole list of configuration options in the [configuration](/v0/configuration) section.
 
+<Tabs items={['app.py', 'config.yaml']} defaultIndex="0">
+   <Tabs.Tab>
+   ```python copy
+    from pipeless_ai.lib.app.app import PipelessApp
+
+    class App(PipelessApp):
+        # Hook to execute before the processing of the first frame
+        def before(self):
+            pass
+
+        # Hook to execute to pre-process each frame
+        def pre_process(self, frame):
+            return frame
+
+        # Hook to execute to process each frame
+        def process(self, frame):
+            return frame
+
+        # Hook to execute after processing each frame
+        def post_process(self, frame):
+            return frame
+
+        # Hook to execute after the processing of the last frame
+        def after(self):
+            pass
+   ```
+   </Tabs.Tab>
+
+   <Tabs.Tab>
+   ```yaml copy
+    input:
+      address:
+        host: localhost
+        port: 1234
+      video:
+        enable: true
+        uri: file:///home/your/path
+    log_level: INFO
+    output:
+      address:
+        host: localhost
+        port: 1237
+      video:
+        enable: true
+        uri: file:///home/your/path
+    worker:
+      n_workers: 1
+    model:
+       uri: ""
+   ```
+   </Tabs.Tab>
+</Tabs>
+
+Update `config.yaml` to specify an existing input URI. It can be a local file using `file://` or a remote stream using `https://`, `rtmp://`, `rstp://` , etc. Check the whole [list of supported](/v0/formats) formats.
+Also, update the output URI, you can simply use a file for this test (there are more formats supported, included remote ones).
+
+Once you have specified proper input and outputs, the newly created application should work and you will see as the output the same that you gave as input, since we did not implement any processing yet.
+
+## Running the project
+
+To test your new application execute the following from the app directory:
+
+```bash copy
+pipeless run
+```
+
+<Callout>
+The above command executes all the components by default. If you need to execute just one of the components use:
+
+```bash copy
+pipeless run <component>
+```
+
+where `<component>` must be one of `input`, `worker`, `output` or `all` (default).
+</Callout>
+
 ## Implementing Media Analysis/Processing
 
-The processing steps are defined as methods of the `App` class. Pipeless loads the hooks you implement and it executes them at the proper time. All of them are optional, you just need to implement those required by your use case.
-
-Also, Pipeless ships the ONNX Runtime to execute inference out-of-the-box when you provide a model URI in the configuration. It works for both CPU (default) and GPU when available in your system. For GPU we currently support CUDA and TensorRT execution providers.
+As you can see on the default files above, the processing steps are defined as methods of the `App` class. Each step corresponds to a Pipeless hook. All of them are optional, you just need to implement those required by your use case.
 
 ### Before and After Hooks
 
@@ -40,12 +114,13 @@ These are the hooks that actually modify/analyze/process the multimedia streams.
 - `post-process`: code to execute after a frame is processed
 
 <Callout>
-When you provide a model URI in the config, the ONNX Runtime will be used to automatically run inference using the provided model. In this case, the `process` hook cannot be implemented since the processing is equivalent to running inference. You will be able to implement the rest of the hooks.
+When you provide a model URI in the config, Pipeless loads the model into the embedded ONNX Runtime to automatically run inference for each frame. In this case, the `process` hook cannot be implemented since the processing step is equivalent to running inference. The rest of the hooks can be implemented as normal.
+Also note that in this case Pipeless performs some automatic preprocessing after your `pre_process` implementation. See the [ONNX Runtime section](/v0/inference) for more information.
 </Callout>
 
 ### App internal state
 
-The application maintains its own internal state. This is useful when you need to pass information between hooks or between the processing of consecutive frames.
+Your application maintains its own internal state. This is useful when you need to pass information between hooks or between the processing of consecutive frames.
 
 Simply use class variables within the `App` class.
 
@@ -53,28 +128,15 @@ Simply use class variables within the `App` class.
 self.some_variable = "some_value"
 ```
 
-In all the processing hooks you will be able to access `self.original_frame`, which contains the original frame, useful in those cases when you nned to modify the frame provided in the hook parameters. An example of this is to draw inference results from the ONNX Runtime since you will probably need to pre-process the input frame to match the model input format, lossing the original frame, that will later need to post-process the inference results.
+### Obtaining the original frame after modifications
+
+Even if the proecessing hooks receive a frame, you may be interested in accessing the original frame in some cirsumstances, for example when you modify it as part of the pre-processing.
+Within all the processing hooks you can access `self.original_frame`, containing the original frame.
 
 <Callout>
-Please note that when deploying several workers each worker will execute an instance of your application, with different internal states.
-The frames will be distributed using a round robin schedule, so consecutive frames on the media stream won't be processed within the same application instance.
+Please note that, when deploying several workers, each worker executes an isolated instance of the application, with different internal states.
+The frames are distributed among workers using a round robin schedule, meaning that consecutive frames on a stream are not processed within the same application instance.
 </Callout>
-
-## Running the App
-
-To test your app execute the following from your app directory:
-
-```bash copy
-pipeless run
-```
-
-The above command will execute all the components by default. If you need to execute just one of the components use:
-
-```bash copy
-pipeless run <component>
-```
-
-where `<component>` must be one of `input`, `worker`, `output` or `all` (default).
 
 ### Core Components
 

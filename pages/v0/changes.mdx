@@ -2,6 +2,12 @@
 
 This is a list of notable changes between versions. Since Pipeless uses semver, you won't typically find here breaking changes but notices about deprecations new configuration options, etc.
 
+### Core version `0.1.16`
+
+The installation of Pipeless has been split into different flavors.
+
+Now, there is a default flavor `pipeless-ai` and two flavors that will install the ONNX dependencies, one for CPU (`pipeless-ai[onnx-cpu]`) and one for GPU (`pipeless-ai[onnx-gpu]`).
+
 ### Core version `0.1.10` and CLI version `0.1.8`
 
 The plugin system was re-build. These versions include the new plugin system. If you were not using plugins, no changes are required.

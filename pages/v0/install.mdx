@@ -31,11 +31,31 @@ brew install gstreamer
 
 ### Installation 🛠️
 
-The following command installs the core (`pipeless-ai`) and the CLI (`pipeless-ai-cli`) into your system.
+Pipeless is provided in different flavors:
 
-```bash copy
-pip install pipeless-ai pipeless-ai-cli
-```
+* **Default**: no inference runtime
+* **ONNX CPU**: installs dependencies and allows to load models into the ONNX Runtime for running inference on **CPU**
+* **ONNX GPU**: installs dependencies and allows to load models into the ONNX Runtime for running inference on **GPU**
+
+The following command installs the core (`pipeless-ai`) and the CLI (`pipeless-ai-cli`) into your system:
+
+* Default flavor:
+
+    ```bash copy
+    pip install pipeless-ai pipeless-ai-cli
+    ```
+
+* ONNX CPU flavor:
+
+    ```bash copy
+    pip install pipeless-ai[onnx-cpu] pipeless-ai-cli
+    ```
+
+* ONNX GPU flavor:
+
+    ```bash copy
+    pip install pipeless-ai[onnx-gpu] pipeless-ai-cli
+    ```
 
 Test the installation with:
 

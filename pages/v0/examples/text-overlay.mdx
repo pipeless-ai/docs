@@ -4,7 +4,7 @@ import { Steps, Callout } from 'nextra/components';
 
 Let's do the most basic stuff we can do with pipeless.
 
-In this example we will edit a video on the fly to add some text and show the video in the screen while at the same time it is processed.
+In this example, we will edit a video on the fly to add some text and show the video on the screen while at the same time it is processed.
 
 You can directly execute the example. To learn what each line of the application does on the [walkthrough section](#walkthrough).
 
@@ -26,7 +26,7 @@ You can directly execute the example. To learn what each line of the application
 ### Clone the repo
 
 ```bash copy
-git clone https://github.com/miguelaeh/pipeless
+git clone https://github.com/pipeless-ai/pipeless
 cd pipeless
 ```
 
@@ -70,7 +70,7 @@ pipeless run
 
 ### Visualize the output
 
-The video should appear on your screen as soon as you execute the `pipeless run` command since we set `screen` as video output URI.
+The video should appear on your screen as soon as you execute the `pipeless run` command since we set `screen` as the video output URI.
 
 </Steps>
 
@@ -78,9 +78,9 @@ The video should appear on your screen as soon as you execute the `pipeless run`
 
 This is a step by step description of what every line of the application code is doing.
 
-In this example we only implement the `process` hook.
+In this example, we only implement the `process` hook.
 
-First , we create a pillow image from the frame array and define the text that will be drawn and the text font and color
+First, we create a pillow image from the frame array and define the text that will be drawn and the text font and color
 
 ```python copy
 pil_image = Image.fromarray(frame)
@@ -96,7 +96,7 @@ Then, we simply draw the text image over our frame:
     draw.text((800, 600), text, fill=text_color, font=font)
 ```
 
-And finally, we return the modified frame as a NumPy array:
+Finally, we return the modified frame as a NumPy array:
 
 ```python copy
     modified_frame = np.array(pil_image)

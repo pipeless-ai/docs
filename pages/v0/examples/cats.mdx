@@ -26,7 +26,7 @@ pip install opencv-python
 ### Clone the repo
 
 ```bash copy
-git clone https://github.com/miguelaeh/pipeless
+git clone https://github.com/pipeless-ai/pipeless
 cd pipeless
 ```
 
@@ -119,7 +119,7 @@ Then, we just obtain the cats on the frame by passing the frame through the mode
 bounding_boxes = model.detectMultiScale(reduced_frame, minSize = (30, 30))
 ```
 
-Finally, we draw the bounding boxes over the original frame. To do that, we need to scale the bounding boxes since they were calcuated for the reduced frame:
+Finally, we draw the bounding boxes over the original frame. To do that, we need to scale the bounding boxes since they were calculated for the reduced frame:
 
 ```python copy
 for box in bounding_boxes:

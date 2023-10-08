@@ -10,11 +10,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/miguelaeh/pipeless.git"
+    "url": "git+https://github.com/pipeless-ai/pipeless.git"
   },
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/miguelaeh/pipeless/issues"
+    "url": "https://github.com/pipeless-ai/pipeless/issues"
   },
   "homepage": "https://pipeless.ai",
   "dependencies": {

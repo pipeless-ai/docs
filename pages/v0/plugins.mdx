@@ -1,8 +1,8 @@
 # Pipeless Plugins
 
-Pipeless has a built in plugin system. Anyone can create and register plugins for common tasks such as producing events to Kafka, skipping image processing when they are similar, etc.
+Pipeless has a built-in plugin system. Anyone can create and register plugins for common tasks such as producing events to Kafka, skipping image processing when they are similar, etc.
 
-The plugins are registered within the Pipeless plugin registry making it easy for you to manage plugins in your project. You can list all the available plugins in registry by running:
+The plugins are registered within the Pipeless plugin registry making it easy for you to manage plugins in your project. You can list all the available plugins in the registry by running:
 
 ```bash copy
 pipeless list available-plugins
@@ -16,13 +16,13 @@ pipeless install plugin plugin_id
 
 You can find the `plugin_id` in the result of the list command above.
 
-You can override the plugin installation directory providing `--plugins-root <your_directory>`. If you override the plugins directory, remember to configure Pipeless to load the plugins from that directory instead of the default one.
+You can override the plugin installation directory by providing `--plugins-root <your_directory>`. If you override the plugins directory, remember to configure Pipeless to load the plugins from that directory instead of the default one.
 
 ## How plugins works
 
-The Pipeless worker loads all the plugins under the `plugins` folder of the application directory before running the application. You can override the plugins directory path using the `plugins.dir` configuration option or exporting the `PIPELESS_PLUGINS_DIR` environment variable.
+The Pipeless worker loads all the plugins under the `plugins` folder of the application directory before running the application. You can override the plugins directory path using the `plugins.dir` configuration option or export the `PIPELESS_PLUGINS_DIR` environment variable.
 
-Plugins are entities that inject code into your application to perform actions out of the box. From your application code you can communicate with a plugin via variables to pass or receive information to/from it. You can access those variables under `self.plugins.<plugin_id>` in your application code. Finally, a plugin can also register util methods in your application that you can invoke to perfrom some pre-defined action.
+Plugins are entities that inject code into your application to perform actions out-of-the-box. From your application code, you can communicate with a plugin via variables to pass or receive information to/from it. You can access those variables under `self.plugins.<plugin_id>` in your application code. Finally, a plugin can also register util methods in your application that you can invoke to perform some pre-defined action.
 
 ### Extra methods
 
@@ -32,7 +32,7 @@ The `plugin_id` is the ID of the plugin in the plugin registry, which is easy to
 
 ### Extended hooks
 
-A plugin that extend your application hooks and execute code before your hook or after it. For example, if the plugin executes code before your hook, it can modify the frame that your hook will receive or it can pass some other values via variables that you can use on the hook implementation. On the other hand, if the plugin executes code after your hook, they typically receive some parameters that you can pass simply by setting a variable in your hook code, or the plugin could perform some final modifications to the frame, saving you some work.
+A plugin that extends your application hooks and executes code before your hook or after it. For example, if the plugin executes code before your hook, it can modify the frame that your hook will receive or it can pass some other values via variables that you can use on the hook implementation. On the other hand, if the plugin executes code after your hook, it typically receives some parameters that you can pass simply by setting a variable in your hook code, or the plugin could perform some final modifications to the frame, saving you some work.
 
 ## Plugins execution
 
@@ -44,8 +44,8 @@ They are executed in order because the output of a plugin may not be suitable fo
 
 Pipeless has official plugins, which are plugins maintained by our team, as well as community plugins, which are plugins maintained by other developers.
 
-The list below contains the plugins mantained by the Pipeless team only. Use the `list available-plugins` commands to see a complete list of registered plugins.
+The list below contains the plugins maintained by the Pipeless team only. Use the `list available-plugins` commands to see a complete list of registered plugins.
 
 - [Kafka](/v0/plugins/kafka/): Export events to a Kafka topic
 - [YOLOv8](/v0/plugins/yolov8): Run YOLOv8 models automatically
-- [Drawing](/v0/plugins/draw): Draw bounding boxes, segmentation masks and keypoints out of the box
+- [Drawing](/v0/plugins/draw): Draw bounding boxes, segmentation masks and keypoints out-of-the-box

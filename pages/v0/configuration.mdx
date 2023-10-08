@@ -23,7 +23,7 @@ The following is the whole list of the currently supported configuration options
 | `output.video.uri`    | `screen` to see video directly on the device screen, or the URI where to send the processed output video. URIs **must** include the protocol (`file://`, `https://`, `rtmp://`, etc) | string | `PIPELESS_OUTPUT_VIDEO_URI` |
 | `output.recv_buffer_size` | Size of the output socket reception buffer | `300` (int) | `PIPELESS_OUTPUT_RECV_BUFFER_SIZE` |
 | `worker.recv_buffer_size` | Size of the worker socket reception buffer | `300` (int) | `PIPELESS_WORKER_RECV_BUFFER_SIZE` |
-| `worker.n_workers` | Number of workers deployed | int | `PIPELESS_WORKER_N_WORKERS` |
+| `worker.n_workers` | When using locally or on-device represents the number of workers to run in parallel. When deploying to the cloud must indicate the number of workers deployed | int | `PIPELESS_WORKER_N_WORKERS` |
 | `worker.show_exec_time` | Print the processing time of each frame on within the worker. Usefull to calculate the number of workers to deploy. | `false` (bool) | `PIPELESS_WORKER_SHOW_EXEC_TIME` |
 | `worker.enable_profiler` | Print execution time of your Pipeless hooks line by line. Really useful to optimize your app. | `false` (bool) | `PIPELESS_WORKER_ENABLE_PROFILER` |
 | `worker.inference.model_uri` | URI of the model to load into the ONNX Runtime. Providing this option enables the ONNX runtime automatically. | string | `PIPELESS_WORKER_INFERENCE_MODEL_URI` |

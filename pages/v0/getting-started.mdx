@@ -1,6 +1,6 @@
 # Getting Started with Pipeless 🚀
 
-Let's take a look at how to create a Pipeless project, the files it contains and how to use them. Make sure to have Pipeless and its requirements installed before continue.
+Let's take a look at how to create a Pipeless project, the files it contains and how to use them. Make sure to have Pipeless and its requirements installed before continuing.
 
 import { Callout, Tabs } from 'nextra/components'
 
@@ -14,7 +14,7 @@ pipeless create project my_awesome_project
 
 The `create project` command creates a directory with the name of the project containing the following files:
 
-* `app.py`: contains your `App` class. This file contains the implementation of your processing functions. For example, throwing inference on a CV model, editing a frame, etc. Within this file you will implement the hooks in charge of procesing the media frames. A;; the hooks are optional.
+* `app.py`: contains your `App` class. This file contains the implementation of your processing functions. For example, throwing inference on a CV model, editing a frame, etc. Within this file, you will implement the hooks in charge of processing the media frames. A;; the hooks are optional.
 
 * `config.yaml`: contains the configuration for each Pipeless component. You can also override all the configuration options via env vars starting with `PIPELESS_` followed by the option YAML path in capital letters. If defined, environment variables take precedence over the configuration file content. Find the whole list of configuration options in the [configuration](/v0/configuration) section.
 
@@ -72,9 +72,9 @@ The `create project` command creates a directory with the name of the project co
 </Tabs>
 
 Update `config.yaml` to specify an existing input URI. It can be a local file using `file://` or a remote stream using `https://`, `rtmp://`, `rstp://` , etc. Check the whole [list of supported](/v0/formats) formats.
-Also, update the output URI, you can simply use a file for this test (there are more formats supported, included remote ones).
+Also, update the output URI, you can simply use a file for this test (there are more formats supported, including remote ones).
 
-Once you have specified proper input and outputs, the newly created application should work and you will see as the output the same that you gave as input, since we did not implement any processing yet.
+Once you have specified proper input and outputs, the newly created application should work and you will see the output the same that you gave as input since we did not implement any processing yet.
 
 ## Running the project
 
@@ -100,7 +100,7 @@ As you can see on the default files above, the processing steps are defined as m
 
 ### Before and After Hooks
 
-These are executed just once per stream. They are tipically used when your app requires to execute some code before starting the processing of a stream or once the stream reaches its end.
+These are executed just once per stream. They are typically used when your app requires you to execute some code before starting the processing of a stream or once the stream reaches its end.
 
 - `before`: contains code that is executed before processing any content from a stream
 - `after`: contains code that is executed after reaching the end of a stream.
@@ -115,7 +115,7 @@ These are the hooks that actually modify/analyze/process the multimedia streams.
 
 <Callout>
 When you provide a model URI in the config, Pipeless loads the model into the embedded ONNX Runtime to automatically run inference for each frame. In this case, the `process` hook cannot be implemented since the processing step is equivalent to running inference. The rest of the hooks can be implemented as normal.
-Also note that in this case Pipeless performs some automatic preprocessing after your `pre_process` implementation. See the [ONNX Runtime section](/v0/inference) for more information.
+Also note that in this case, Pipeless performs some automatic preprocessing after your `pre_process` implementation. See the [ONNX Runtime section](/v0/inference) for more information.
 </Callout>
 
 ### App internal state
@@ -130,7 +130,7 @@ self.some_variable = "some_value"
 
 ### Obtaining the original frame after modifications
 
-Even if the proecessing hooks receive a frame, you may be interested in accessing the original frame in some cirsumstances, for example when you modify it as part of the pre-processing.
+Even if the processing hooks receive a frame, you may be interested in accessing the original frame in some circumstances, for example when you modify it as part of the pre-processing.
 Within all the processing hooks you can access `self.original_frame`, containing the original frame.
 
 <Callout>
@@ -140,10 +140,10 @@ The frames are distributed among workers using a round robin schedule, meaning t
 
 ### Core Components
 
-Pipeless has been designed for easy local and edge execution but also, to easily deploy to the cloud. Thus, it is split in 3 main components:
+Pipeless has been designed for easy local and edge execution but also, to easily deploy to the cloud. Thus, it is split into 3 main components:
 
 * `input`: Receives the media streams, demux and decode the streams.
-* `worker`: Receives raw media frames, and processes them according to the user app. You can deploy any number of workers and the processing will be load balanced automatically using a round robin schedule. When deployed to the cloud this allows to reach **real time** processing even with each frame takes relatively long times to process. Note in that case, that each worker executes the `before` and `after` hooks and that each worker has a different instance of the running application.
+* `worker`: Receives raw media frames, and processes them according to the user app. You can deploy any number of workers and the processing will be load balanced automatically using a round robin schedule. When deployed to the cloud this allows to reach **real time** processing even with each frame taking relatively long times to process. Note in that case, that each worker executes the `before` and `after` hooks and that each worker has a different instance of the running application.
 * `output` (optional): Receives the processed raw media frames, encodes and mux them into the proper container format for the output protocol provided by the user
 
-Each component runs with independence of the others.
+Each component runs with the independence of the others.

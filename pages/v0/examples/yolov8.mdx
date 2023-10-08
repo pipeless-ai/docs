@@ -3,7 +3,7 @@
 import { Steps, Callout } from 'nextra/components';
 
 <Callout>
-This example uses the YOLOv8 SDK. The Pipeless worker is now shipping a [built-in ONNX Runtime](/v0/inference) and we recommend to stick to it, which will help you creating lighter applications and run them on GPUs out fo the box. That said, nothing prevents you from loading frameworks on your Pipeless application.
+This example uses the YOLOv8 SDK. The Pipeless worker is now shipping a [built-in ONNX Runtime](/v0/inference) and we recommend sticking to it, which will help you create lighter applications and run them on GPUs out-of-the-box. That said, nothing prevents you from loading frameworks on your Pipeless application.
 </Callout>
 
 This example makes use of the Pipeless YOLOv8 plugin to perform object detection, segmentation and pose estimation, everything at the same time.
@@ -12,7 +12,7 @@ Depending on the YOLO model you specify, it will perform object detection only, 
 
 The results are drawn over the frames using the Pipeless Drawing Plugin to demonstrate its usage.
 
-You can directly execute the example following the steps below or learn what each line of the application does in the the [walkthrough section](#walkthrough).
+You can directly execute the example following the steps below or learn what each line of the application does in the [walkthrough section](#walkthrough).
 
 You can check the whole documentation of the plugins used at:
 
@@ -37,7 +37,7 @@ You can check the whole documentation of the plugins used at:
 ### Clone the repo
 
 ```bash copy
-git clone https://github.com/miguelaeh/pipeless
+git clone https://github.com/pipeless-ai/pipeless
 cd pipeless
 ```
 
@@ -92,11 +92,11 @@ For example:
 export PIPELESS_PLUGIN_YOLOV8_MODEL="yolov8n-seg.pt"
 ```
 
-### Configure the drawing confidende threshold (optional)
+### Configure the drawing confidence threshold (optional)
 
-By default, the Pipeless drawing plugin will draw over the frames all the data you pass to it. However, for convenienve it supports a confidence threshold parameter that allows you to filter data that is under the confidence thredshold.
+By default, the Pipeless drawing plugin will draw over the frames all the data you pass to it. However, for convenience it supports a confidence threshold parameter that allows you to filter data that is under the confidence threshold.
 
-If you want to set the thredshold, for example to `0.85` run the following:
+If you want to set the threshold, for example to `0.85` run the following:
 
 ```bash copy
 export PIPELESS_PLUGIN_DRAW_CONFIDENCE_THRESHOLD=0.85

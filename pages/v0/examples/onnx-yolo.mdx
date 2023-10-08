@@ -9,7 +9,7 @@ After the inference, we post-process the results and use the `draw` plugin to dr
 The ONNX model to use is included within the example code. FYI it was obtained by simply exporting the YOLOv8n model to the ONNX format, so it can be loaded into the ONNX Runtime.
 
 <Callout>
-Please note that even if this examples uses a YOLO model, we are NOT using the YOLO sdk here. We simply load the YOLO model in ONNX format from a file in the same way you can load any ONNX model.
+Please note that even if this example uses a YOLO model, we are NOT using the YOLO sdk here. We simply load the YOLO model in ONNX format from a file in the same way you can load any ONNX model.
 </Callout>
 
 You can directly execute the example following the steps below or learn what each line of the application does in the [walkthrough section](#walkthrough).
@@ -34,7 +34,7 @@ You can check the whole documentation of the draw plugin at:
 ### Clone the repo
 
 ```bash copy
-git clone https://github.com/miguelaeh/pipeless
+git clone https://github.com/pipeless-ai/pipeless
 cd pipeless
 ```
 
@@ -109,7 +109,7 @@ def pre_process(self, frame):
     return  frame
 ```
 
-The normalization is a simple process to convert the image RGB pixels into values in the range 0 to 1. The code above is more or less equivalent to divide the frame RGB valus by `255`.
+The normalization is a simple process to convert the image RGB pixels into values in the range 0 to 1. The code above is more or less equivalent to dividing the frame RGB value by `255`.
 
 ### Post-process hook
 
@@ -122,11 +122,11 @@ In this case, since we are performing object detection, it will be an array of b
 1. Extract the corresponding class ID of each of the predictions obtained in the previous step.
 1. Extract the bounding boxes values (x,y,w,h) from the prediction.
 1. Escale the boxes to the original image size. This is very important because the bounding boxes will correspond to the model input image, which is almost always resized to match the model input format.
-1. Convert the bounding boxes from x,y,w,h, to x,y,x,y. We perform this step simply to allow th draw plugin to draw them for us.
-1. Perform non max suppresion. This is a common step in post-processing and consists on the elimination of redundant bounding boxes. In this case, we use a method from OpenCV that takes care of it.
+1. Convert the bounding boxes from x,y,w,h, to x,y,x,y. We perform this step simply to allow the draw plugin to draw them for us.
+1. Perform non max suppression. This is a common step in post-processing and consists of the elimination of redundant bounding boxes. In this case, we use a method from OpenCV that takes care of it.
 1. Provide our bounding boxes, scores, labels and the color in which they will be drawn to the drawing plugin.
 
-The following is the function that takes care of most of the steps above, except from providing the values to the drawing plugin:
+The following is the function that takes care of most of the steps above, except for providing the values to the drawing plugin:
 
 ```python copy
 def process_output(model_output, orginal_image_shape, model_input_shape):

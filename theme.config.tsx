@@ -8,7 +8,7 @@ const config: DocsThemeConfig = {
   logoLink: 'https://pipeless.ai',
   primaryHue: 297, // Equivalent to #701a75
   project: {
-    link: 'https://github.com/miguelaeh/pipeless',
+    link: 'https://github.com/pipeless-ai/pipeless',
   },
   chat: {
     link: 'https://discord.gg/K2qxQ8uedG',

@@ -3,6 +3,6 @@
     "cats": "Detecting Cats on a Video",
     "pose": "Pose detection with TensorFlow",
     "kafka": "Exporting events to Kafka",
-    "yolov8": "Execute YOLOv8 models out of the box",
+    "yolov8": "Execute YOLOv8 models out-of-the-box",
     "onnx-yolo": "Object detection using the ONNX Runtime"
 }

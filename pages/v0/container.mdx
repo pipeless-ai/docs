@@ -1,12 +1,12 @@
 # Pipeless Container Images
 
-The container images provide a way to run Pipeless out-of-the box without having to deal with dependencies and also makes really easy to deploy Pipeless to the cloud.
+The container images provide a way to run Pipeless out-of-the-box without having to deal with dependencies and also make really easy to deploy Pipeless to the cloud.
 
 We provide several images:
 
-* `miguelaeh/pipeless:{version}`: Default image with enough dependencies to play and test Pipeless on CPU.
-* `miguelaeh/pipeless:{version}-cuda`: Image to run Pipeless with CUDA support for running inference. When using this image you need to install the Nvidia Container Toolkit on your system.
-* `miguelaeh/pipeless:{version}-tensorrt`: Image to run Pipeless using TensorRT based GPUs. When using this image you need to install the Nvidia Container Toolkit on your system.
+* `pipeless-ai/pipeless:{version}`: Default image with enough dependencies to play and test Pipeless on CPU.
+* `pipeless-ai/pipeless:{version}-cuda`: Image to run Pipeless with CUDA support for running inference. When using this image you need to install the Nvidia Container Toolkit on your system.
+* `pipeless-ai/pipeless:{version}-tensorrt`: Image to run Pipeless using TensorRT based GPUs. When using this image you need to install the Nvidia Container Toolkit on your system.
 
 import { Callout } from 'nextra/components'
 
@@ -15,13 +15,13 @@ import { Callout } from 'nextra/components'
 Print help command:
 
 ```bash copy
-docker run --rm miguelaeh/pipeless --help
+docker run --rm pipeless-ai/pipeless --help
 ```
 
 Create a new project locally:
 
 ```bash copy
-docker run --rm -v /your/app/parent/dir:/app miguelaeh/pipeless create project my_app_name
+docker run --rm -v /your/app/parent/dir:/app pipeless-ai/pipeless create project my_app_name
 ```
 <Callout>
 Note you must mount as volume the application parent dir when creating the project since a new folder will be generated for your application.
@@ -31,18 +31,18 @@ The rest of the commands take the actual application directory.
 Run all components:
 
 ```bash copy
-docker run --rm -v /your/app/dir:/app miguelaeh/pipeless run all
+docker run --rm -v /your/app/dir:/app pipeless-ai/pipeless run all
 ```
 
 Run input only:
 
 ```bash copy
-docker run --rm miguelaeh/pipeless run input
+docker run --rm pipeless-ai/pipeless run input
 ```
 
 ### GPU usage with CUDA
 
-Use the image `miguelaeh/pipeless:latest-cuda`. To properly use CUDA inside the container, your host system needs to have `nvidia-container-toolkit` installed. Run the following commands to install it:
+Use the image `pipeless-ai/pipeless:latest-cuda`. To properly use CUDA inside the container, your host system needs to have `nvidia-container-toolkit` installed. Run the following commands to install it:
 
 ```bash copy
 curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
@@ -63,39 +63,39 @@ systemctl restart docker
 Finally, run the image by providing the `--gpus all` option:
 
 ```bash copy
-docker run --gpus all -v /your/app/dir:/app  miguelaeh/pipeless:latest-cuda run 
+docker run --gpus all -v /your/app/dir:/app  pipeless-ai/pipeless:latest-cuda run 
 ```
 
 To verify the image is recognizing the GPU, check on the logs if the Pipeless worker is showing `CUDAExecutionProvider` as an available provider. Alternatively, you can check it with the `nvidia-smi` command as follows:
 
 ```bash copy
-docker run --gpus all --entrypoint nvidia-smi miguelaeh/pipeless:latest-cuda
+docker run --gpus all --entrypoint nvidia-smi pipeless-ai/pipeless:latest-cuda
 ```
 
 ### Install Custom Python Packages
 
-Sometimes, your app may require python packages that are not installed by default into the pipeless container. You can use the `PIPELESS_USER_PYTHON_PACKAGES` variable to automatically install them on start. You can specify them as a list separated by commas (`,`), semicolons (`;`) or spaces (` `). For example:
+Sometimes, your app may require Python packages that are not installed by default into the pipeless container. You can use the `PIPELESS_USER_PYTHON_PACKAGES` variable to automatically install them on start. You can specify them as a list separated by commas (`,`), semicolons (`;`) or spaces (` `). For example:
 
 ```bash copy
-docker run --rm -e "PIPELESS_USER_PYTHON_PACKAGES=opencv-python;some_other_package" miguelaeh/pipeless run worker
+docker run --rm -e "PIPELESS_USER_PYTHON_PACKAGES=opencv-python;some_other_package" pipeless-ai/pipeless run worker
 ```
 
 ### Important Notes
 
-If you want to store the processed media to a file, it must be done in a path under `/app`. For example, setting `PIPELESS_OUTPUT_VIDEO_URI=file:///app/my_video.mp4`.
-Futhermore, the directory mounted at `/app` (i.e. `/your/app/dir` on the above examples) must have group `root` with write permissions.
+If you want to store the processed media in a file, it must be done in a path under `/app`. For example, setting `PIPELESS_OUTPUT_VIDEO_URI=file:///app/my_video.mp4`.
+Furthermore, the directory mounted at `/app` (i.e. `/your/app/dir` on the above examples) must have group `root` with write permissions.
 
 ## Docker compose usage
 
 The `docker-compose.yaml` file allows you to automatically deploy your application locally as if it would be deployed to the cloud.
 
-Start docker compose:
+Start docker-compose:
 
 ```bash copy
 APP_DIR=/your/app/dir docker compose up
 ```
 
-Stop the docker compose:
+Stop the docker-compose:
 
 ```bash copy
 APP_DIR=/your/app/dir docker compose down -v

@@ -26,6 +26,7 @@ The following is the whole list of the currently supported configuration options
 | `worker.n_workers` | When using locally or on-device represents the number of workers to run in parallel. When deploying to the cloud must indicate the number of workers deployed | int | `PIPELESS_WORKER_N_WORKERS` |
 | `worker.show_exec_time` | Print the processing time of each frame on within the worker. Usefull to calculate the number of workers to deploy. | `false` (bool) | `PIPELESS_WORKER_SHOW_EXEC_TIME` |
 | `worker.enable_profiler` | Print execution time of your Pipeless hooks line by line. Really useful to optimize your app. | `false` (bool) | `PIPELESS_WORKER_ENABLE_PROFILER` |
+| `worker.skip_frames` | Enables dynamic frame processing skip allowing to maintain the processing in real-time for streams. | `false` (bool) | `PIPELESS_WORKER_SKIP_FRAMES` |
 | `worker.inference.model_uri` | URI of the model to load into the ONNX Runtime. Providing this option enables the ONNX runtime automatically. | string | `PIPELESS_WORKER_INFERENCE_MODEL_URI` |
 | `worker.inference.pre_process_model_uri` | URI of the model to load into the ONNX Runtime. Providing this option enables the ONNX runtime automatically. | `None` (string) | `PIPELESS_WORKER_INFERENCE_PRE_PROCESS_MODEL_URI` |
 | `worker.inference.force_opset_version` | Automatically converts the model to the specified Operation Set version | `None` (number) | `PIPELESS_WORKER_INFERENCE_FORCE_OPSET_VERSION` |
@@ -37,3 +38,13 @@ The following is the whole list of the currently supported configuration options
 | `plugins.dir` | Custom directory for plugins | `plugins` (string) | `PIPELESS_PLUGINS_DIR` |
 | `plugins.order` | Execution order for the plugins | string | `PIPELESS_PLUGINS_ORDER` |
 
+## Skipping frames
+
+When you are processing a stream in real-time using a device that does not have enough resources, you can enable frame skipping by setting `worker.skip_frames` to `true`.
+
+This parameter indicates Pipeless to dynamically skip the `process` hook for some frames. The frames are selected depending on the previous frames' processing times and the frame rate of the input video stream.
+
+The only hook that this option skips is the `process` hook or the model inference execution. In the rest of the hooks, like in pre-process or post-process, you can know when a frame has been or will be skipped by checking `self.skip_frame`.
+In this way, you can still do some things in your application even when a frame is not processed. For example, you may want to count frames, so can add an `if-else` to simply count the frame in `pre-process` even if the processing is not executed for the frame, avoiding unnecessary overhead.
+
+When a frame is skipped and you are using the inference runtime (loading a model), the `post-process` hook will contain the previous frame inference results. This is useful in cases where you are, for example, drawing bounding boxes, so you can countinuously print boxes on every single frame, even when it has not been processed, making the output video look better.

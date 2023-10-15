@@ -48,3 +48,11 @@ The only hook that this option skips is the `process` hook or the model inferenc
 In this way, you can still do some things in your application even when a frame is not processed. For example, you may want to count frames, so can add an `if-else` to simply count the frame in `pre-process` even if the processing is not executed for the frame, avoiding unnecessary overhead.
 
 When a frame is skipped and you are using the inference runtime (loading a model), the `post-process` hook will contain the previous frame inference results. This is useful in cases where you are, for example, drawing bounding boxes, so you can countinuously print boxes on every single frame, even when it has not been processed, making the output video look better.
+
+<Callout>
+If you get an error mentioning a division by zero it is likely that the input video your provided does not have the FPS capabilities properly set. If you are using a video file try reencoding using `ffmpeg`. For example, use the following command for an mp4 video to fix its metadata:
+
+```
+ffmpeg -i video.mp4 -pix_fmt yuv420p -crf 18 video-good.mp4
+```
+</Callout>

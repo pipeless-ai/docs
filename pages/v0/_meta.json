@@ -6,6 +6,7 @@
     "formats": "Stream Formats and Protocols",
     "inference": "Inference with ONNX runtime",
     "container": "Container images",
+    "deployment": "Deploying your application",
     "plugins": "Plugins",
     "models": "Ready to Use CV Models",
     "examples": "Examples",

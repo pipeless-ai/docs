@@ -1,0 +1,51 @@
+import { Card, Cards, FileTree, Callout } from 'nextra/components'
+
+# Pipeless project strucutre
+
+This page provides an overview of the file and folder structure of a Pipeless project. It covers top-level files and folders, hook files and stage name conventions.
+
+A Pipeless project is structured in stages. Each stage is a like a box that performs a specific task, you can think about a stage like a micro pipeline. A Pipeless project consists of a main directory where each sub-directory defines a stage.
+
+Within each stage folder you create the files that define your Pipeless hooks. Each hook represents a processing step in the stage micro pipeline (i.e. pre-processing, processing and post-processing).
+
+When you provide a new stream to Pipeless, you have to specify a sorted list of stages. We call that list the "frame execution path", and it represents the whole pipeline that the frames of the stream will go through.
+
+The following is an example of a generic project structure:
+
+<FileTree>
+  <FileTree.Folder name="my-project" defaultOpen>
+    <FileTree.Folder name="a-python-stage" defaultOpen>
+      <FileTree.File name="pre-process.py" />
+      <FileTree.File name="process.py" />
+      <FileTree.File name="post-process.py" />
+    </FileTree.Folder>
+    <FileTree.Folder name="a-stage-using-an-inference-runtime" defaultOpen>
+      <FileTree.File name="pre-process.py" />
+      <FileTree.File name="process.json" />
+      <FileTree.File name="post-process.py" />
+    </FileTree.Folder>
+    <FileTree.Folder name="a-multi-language-stage" defaultOpen>
+      <FileTree.File name="pre-process.py" />
+      <FileTree.File name="process.json" />
+      <FileTree.File name="post-process.rs" />
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+
+## Hook files
+
+You can add any kind of file to a stage, however, the following files are reserved to be used by Pipeless:
+
+* `init.{py,rs,...}`: Defines the stage context, which is global for the stage. You can implement here code to setup your stage, like opening connections to external servers, loading a model from the filesystem, etc.
+* `pre-process.{py,rs,...}`: Defines the pre-processing step of the stage. You can implement this file in several programming languages.
+* `post-process.{py,rs,...}`: Defines the post-processing step of the stage. You can implement this file in several programming languages.
+* `process.{py,rs,...}`: Defines the processing step of the stage. You can implement this file in several programming languages.
+* `process.json`: Defines some metadata to use one of the supported inference runtimes in the processing step. `process.json` cannot exist on a stage folder at the same time as `process.{py,rs,...}`.
+
+<Callout>
+We have noticed some simple use cases where you may be tempted to write all the code into a process file, however, we strongly recommend to organize your code properly according the provided hook types. This will help you with performance by leveraging the highest level of parallelization when running.
+</Callout>
+
+## Stage folders
+
+Stage folders can be named as you want, Pipeless uses "file-system routing" to load them.

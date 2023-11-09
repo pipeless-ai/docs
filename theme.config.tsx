@@ -36,7 +36,10 @@ const config: DocsThemeConfig = {
   banner: {
     key: 'cloud',
     text: <a target="blank" href="https://lfkz9noht13.typeform.com/to/Mb4OsDK1"><p>🚀 &nbsp;&nbsp;<b>Pipeless Cloud private beta:</b>&nbsp;Deploy with a command, scale without limits! &nbsp;<span style={{ textDecoration: "underline" }}>Join the beta program</span></p></a>
-  }
+  },
+  sidebar: {
+    defaultMenuCollapseLevel: 1,
+  },
 }
 
 export default config

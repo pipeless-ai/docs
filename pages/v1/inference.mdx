@@ -1,0 +1,77 @@
+# Loading a model into an inference runtime
+
+Pipeless supports some inference runtimes so you can easily load a model and run inference either in CPU or GPU.
+
+To enable one of the inference runtimes for a stage just create a `process.json` file within the stage folder.
+
+The minimum content required by `process.json` is the runtime key and the model URI:
+
+```json copy
+{
+    "runtime": "onnx",
+    "model_uri": "https://pipeless-public.s3.eu-west-3.amazonaws.com/yolov8n.onnx",
+}
+```
+
+## Supported runtimes
+
+This section contains the supported inference runtimes as well as the configuration parameters for each one. The parameters for the inference runtime are provided under the `inference_params` field in the `process.json` file.
+
+For example:
+
+```json copy
+{
+    "runtime": "onnx",
+    "model_uri": "https://pipeless-public.s3.eu-west-3.amazonaws.com/yolov8n.onnx",
+    "inference_params": {
+        "execution_provider": "TensorRT"
+    }
+}
+```
+
+### ONNX Runtime
+
+The [ONNX Runtime](https://onnxruntime.ai/) is widely used. Most of the machine learning frameworks allow to export models to ONNX format.
+
+* Runtime key: `onnx`
+* Parameters:
+    `execution_provider`: The execution provider to use. Allowed values: `cpu`, `CUDA`, `TensorRT`, `OpenVINO`.
+    `execution_mode`: Either `Parallel` or `Sequential`. Check the [ONNX threading docs](https://onnxruntime.ai/docs/performance/tune-performance/threading.html).
+    `inter_threads`: A integer number. Only takes effect if `execution_mode` is `parallel` (and the model nodes can be run in parallel). Indicates the maximum number of threads to use to run them in parallel.
+    `intra_threads`: A integer number, Indicates the number of threads to parallelize the execution within nodes.
+
+## General Troubleshooting
+
+### cudaErrorNoKernelImageForDevice
+
+You may find a message like the following when CUDA was not compiled for your target GPU architecture:
+
+```
+Status Message: CUDA error cudaErrorNoKernelImageForDevice:no kernel image is available for execution on the device
+```
+
+Consider building CUDA yourself or using a different GPU. This error has been reported in some Nvidia 940MX (Maxwell architecture).
+
+### Seems to get stuck
+
+If running `pipeless run` using the ONNX inference it seems to get stuck and there is not a clear error shown, try running the worker only to see the error with `pipeless run worker`.
+
+### I have CUDA and Cudnn installed but ONNX Runtime is not using CUDA
+
+In this case, you usually get a warning like:
+
+```
+[W:onnxruntime:Default, onnxruntime_pybind_state.cc:640 CreateExecutionProviderInstance] Failed to create CUDAExecutionProvider. Please reference https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html#requirements to ensure all dependencies are met.
+```
+
+Ensure you have the proper CUDA and Cudnn versions installed. Check the [ONNX CUDA requirements](https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html) to ensure your versions are compatible. We recommend using CUDA version `11.7` since `12.X` is not properly recognized by the latest version of the ONNX Runtime.
+
+Optionally, you can use the Pipeless CUDA container image. Find the docs [here](/v1/container).
+
+### Segmentation fault (core dumped)
+
+The most common error that leads to a segmentation fault is to provide wrong input data to the model. Double check that what your `pre-process` hook is returning follows the model input format (previous to the automatic transformations mentioned above).
+
+Another common reason is a wrong CUDA version for your target GPU.
+
+If you suffer a segmentation fault and you are unable to understand why, open a GitHub issue providing all the information you can, so we can help you figure it out.

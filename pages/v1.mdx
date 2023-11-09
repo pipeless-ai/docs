@@ -1,0 +1,23 @@
+# Index - v1.x.x
+
+import meta from './v1/_meta.json';
+import { Cards, Card } from 'nextra/components';
+import { CardsIcon, StarsIcon, ChevronRightIcon } from '../components/icons';
+
+The following are all the docs sections for Pipeless versions `v1.x.x`
+
+export const Index = () => {
+    return (
+        <Cards>
+        {
+            Object.keys(meta).map((section, key) =>
+                <Card key={key} icon={<ChevronRightIcon />}
+                    title={meta[section]} href={`/docs/v1/${section}`}
+                />
+            )
+        }
+        </Cards>
+    );
+};
+
+<Index />

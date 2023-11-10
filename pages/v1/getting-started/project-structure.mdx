@@ -4,12 +4,6 @@ import { Card, Cards, FileTree, Callout } from 'nextra/components'
 
 This page provides an overview of the file and folder structure of a Pipeless project. It covers top-level files and folders, hook files and stage name conventions.
 
-A Pipeless project is structured in stages. Each stage is a like a box that performs a specific task, you can think about a stage like a micro pipeline. A Pipeless project consists of a main directory where each sub-directory defines a stage.
-
-Within each stage folder you create the files that define your Pipeless hooks. Each hook represents a processing step in the stage micro pipeline (i.e. pre-processing, processing and post-processing).
-
-When you provide a new stream to Pipeless, you have to specify a sorted list of stages. We call that list the "frame execution path", and it represents the whole pipeline that the frames of the stream will go through.
-
 The following is an example of a generic project structure:
 
 <FileTree>

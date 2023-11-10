@@ -1,8 +1,26 @@
 # Getting Started with Pipeless 🚀
 
-Make sure to have Pipeless and its dependencies installed before continuing.
+Make sure to have Pipeless and its dependencies installed before continuing. Check the [installation guide](/v1/getting-started/installation).
 
 import { Callout, Tabs } from 'nextra/components'
+
+## Pipeless basic concepts
+
+A Pipeless project is structured in **stages**. Each stage is a like a box that performs a very specific
+task. You can think about a stage like a micro pipeline. Within each stage you can implement pre-processing,
+processing and post-processing, as well as run models. Stages run in parallel so you should split your code
+logically in as many stages as possible to leverage full speed.
+
+When you provide a new stream to Pipeless, you have to specify a sorted list of stages. We call that list
+the "**frame execution path**" or just the **frame path**, and it represents the whole pipeline that the
+frames of that stream will go through. A single stage can be used in as many streams as you need.
+
+A Pipeless project consists of **at least** one stage. So your project will be a directory where each
+sub-directory defines a stage.
+
+Within each stage folder you create the files that define your Pipeless **hooks**. Each hook represents a
+processing step in the stage micro pipeline (i.e. pre-processing, processing or post-processing). All of them
+are optional and you can implement them in **several programming languages**.
 
 ## Create a new project
 
@@ -12,8 +30,10 @@ Run the following command:
 pipeless init my_project --template scaffold
 ```
 
-The above command creates a directory for the project root and, inside it, a directory called `my-stage`, which contains a scaffold of a new stage.
-The stage created will be executed, but the code it contains does nothing. You can add some code there later getting inspiration from the [examples](/v1/examples).
+The above command creates a directory for the project root and, inside it, a directory called `my-stage`,
+which contains a scaffold of a new stage.
+The stage created will be executed, but the code it contains does nothing. You can add some code there
+later getting inspiration from the [examples](/v1/examples).
 
 Let's start Pipeless and provide a stream. Run the following command from `my_project`:
 
@@ -37,7 +57,8 @@ You should now be able to submit streams:
 pipeless add stream --input-uri "https://pipeless-public.s3.eu-west-3.amazonaws.com/cats.mp4" --output-uri "screen" --frame-path "my-stage"
 ```
 
-We indicated to read the video form the provided URL and show the results in the screen. The output is optional since in many computer vision use cases you don't actually want to see the output video but to execute some code on some events.
+We indicated to read the video from the provided URL and show the results in the screen. The output is optional
+since in many computer vision use cases you don't actually want to see the output video but to execute some code on some events.
 The frame path indicates the stages that should be executed for each frame of the provided stream.
 
 The CLI allows you to easily add, edit or remove streams. To see all the available options and commands run:
@@ -48,11 +69,19 @@ pipeless --help
 
 ## Creating a new stage
 
-Creating a new stage is as simple as creating a new folder. The folder name will be adopted by Pipeless as the stage name, you will use it when providing the frame path of a new stream.
+Creating a new stage is as simple as creating a new folder. The folder name will be adopted by Pipeless as the stage name, you
+will use it when providing the frame path of a new stream.
 
-A stage can have its own global context. The **stage context** is provided to all the stage hooks as read-only. This allows to perform slow tasks just once when Pipeless initializes the stage instead of performing the same operation on every frame, avoiding extra processing time. For example, you can open connections to external servers, load a model file from the filesystem, etc.
+### Stage context
 
-To define the initialization logic for a stage create a `init.{py,rs,...}` file containing a function called `init` that returns the context data. The following is an example that initializes a stage by loading a XML file, within each stage hooks we will be able to access the context of the XML file without loading it again:
+A stage can have its own global context. The **stage context** is provided to the hooks
+as read-only. This allows to perform slow tasks just once when Pipeless initializes
+the stage instead of performing the same operation on every frame, avoiding extra processing
+time. For example, you can open connections to external servers, load a model file from the filesystem, etc.
+
+To define context initialization logic for a stage create a `init.{py,rs,...}` file containing a
+function called `init` that should return any data you want to have available in the context. The
+following is an example that initializes a stage context with a XML file that we can later use on the hooks:
 
 ```python filename="init.py"
 import cv2
@@ -64,16 +93,20 @@ def init():
 ```
 
 <Callout>
-In the short future Pipeless will allow to load and unload stages dynamically, however, at this moment you need to restart Pipeless to load new stages or changes on existing ones.
+Pipeless loads stages when you run `pipeless start`. In the short future we plan to support
+loading and unloading stages dynamically, but at this moment you need to restart Pipeless
+for changes to take effect.
 </Callout>
 
 ## Writting hooks
 
-A stage is composed of hooks. There are 3 types of hooks: pre-processing, processing and post-processing hooks. You can define hooks in several programming languages.
+A stage is composed of hooks. There are 3 types of hooks: pre-processing, processing and post-processing hooks.
+You can define hooks in several programming languages.
 
 Defining a hook is as simple as creating a file containing a `hook` function that receives the frame data and the stage context (read-only).
 
-Depending on the hook type you will create a file named `pre-process.xx`, `process.xx` or `post-process.xx` where `xx` is the extension of the programming language.
+Depending on the hook type you will create a file named `pre-process.xx`, `process.xx` or `post-process.xx` where `xx`
+is the extension of the programming language.
 
 The following is an example of a Python hook for processing:
 
@@ -89,12 +122,14 @@ def hook(frame_data, context):
     frame_data['inference_output'] = bounding_boxes
 ```
 
-In the hook above we have taken out our model from the stage context. The model was loaded from a XML file during the stage initialization (`init.py`, see [section above](#creating-a-new-stage)).
+In the hook above we have taken out our model from the stage context. The model was loaded from a XML file during the
+stage initialization (`init.py`, see [section above](#creating-a-new-stage)).
 
 You can also see we take the RGB frame array from the frame data, run our model with it and update the `inference_output` field of the frame data.
 
 <Callout>
-Note in most cases you will not implement a `process` hook but to use an [inference runtime](#inference-runtime) instead and pass your model to it, implementing only the pre-process and post-process hooks.
+Note in most cases you will not implement a `process` hook but to use an [inference runtime](#inference-runtime) instead
+and pass your model to it, implementing only the pre-process and post-process hooks.
 </Callout>
 
 ### Frame data fields
@@ -115,11 +150,13 @@ The frame data provided to the hooks contains the following fields:
 
 ### Inference runtime
 
-When you have a model and want to perform inference on it using one of the supported inference runtimes you use the `process.json` hook. Note `process.json` cannot be combined with any other `process.xx` file.
+When you have a model and want to perform inference on it using one of the supported inference runtimes you
+use the `process.json` hook. Note `process.json` cannot be combined with any other `process.xx` file.
 
 Within this JSON you can define the model to use, the inference runtime and the runtime parameters.
 
-To provide the inputs you will set the `inference_input` field of the frame data in your `pre-process` hook. And to parse the output you will read the `inference_output` field from the frame data at your `post-process` hook.
+To provide the inputs you will set the `inference_input` field of the frame data in your `pre-process`
+hook. And to parse the output you will read the `inference_output` field from the frame data at your `post-process` hook.
 
 The following is an example of using the ONNX runtime with the CPU execution provider:
 

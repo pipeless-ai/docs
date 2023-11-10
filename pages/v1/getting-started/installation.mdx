@@ -13,9 +13,30 @@ You have two options when using Pipeless:
 ### Requirements ☝️
 
 * Python (tested with version `3.10.12`)
-* **Gstreamer 1.20.3**. Verify with `gst-launch-1.0 --gst-version`. Installation instructions [here](https://gstreamer.freedesktop.org/documentation/installing/index.html?gi-language=python)
+* **Gstreamer 1.20.3**. Verify with `gst-launch-1.0 --gst-version`.
 
-#### Note about macOS
+#### Install dependencies for Linux
+
+* Python:
+
+    ```bash copy
+    sudo apt-get install python3 python3-pip
+    ```
+
+* Gstreamer:
+
+    Follow the installation instructions [here](https://gstreamer.freedesktop.org/documentation/installing/index.html?gi-language=python) or just run:
+
+    ```bash copy
+    sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
+        libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base \
+        gstreamer1.0-plugins-good gstreamer1.0-plugins-bad \
+        gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools \
+        gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 \
+        gstreamer1.0-qt5 gstreamer1.0-pulseaudio libcairo2-dev libgirepository1.0-dev
+    ```
+
+#### Install dependencies for macOS
 
 The latest version of macOS (Ventura) comes with Python `3.9` by default. You can install version `3.10` with:
 
@@ -31,13 +52,21 @@ brew install gstreamer
 
 ### Installation 🛠️
 
-Run the following command to install Pipeless:
+Pipeless has an installer script that automatically grabs the latest version and installs it locally.
 
 ```bash copy
-TODO
+curl https://raw.githubusercontent.com/pipeless-ai/pipeless/main/install.sh | bash
 ```
 
-Test the installation with:
+Or you can fetch the script, and then execute it locally. It's well documented so that you can read through it and understand what it is doing before you run it.
+
+```bash copy
+curl -fsSL -o install_pipeless.sh https://raw.githubusercontent.com/pipeless-ai/pipeless/main/install.sh
+chmod 700 install_pipeless.sh
+./install_pipeless.sh
+```
+
+Finally, test the installation with:
 
 ```bash copy
 pipeless --help

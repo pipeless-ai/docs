@@ -7,51 +7,38 @@ Welcome to the Pipeless documentation!
 
 ## What is Pipeless?
 
-Pipeless is an **open-source** computer vision framework that ships all the features you need to create and deploy efficient computer vision applications that work in real-time. Just like you implement specific functions in serverless web applications, Pipeless simply requires you to implement certain hooks to process any stream from any source.
+Pipeless is an **open-source computer vision framework** that ships all the features you
+need to create and deploy efficient computer vision applications that work in real-time.
+Pipeless is the easiest way to create a computer vision application.
 
-With Pipeless, you can deploy either on edge devices or to the cloud thanks to our container images, and it also provides a built-in communication layer to boost the stream processing speed to any desired framerate out-of-the-box, by automatically distributing the frame processing without using brokers.
+## Why Pipeless?
 
-Pipeless provides industry-standard models that you can use out-of-the-box or easily bring your own custom model. The Pipeless worker contains a built-in ONNX Runtime allowing you to run inference using any compatible model.
+Next.js (among others) allowed web developers to create applications quickly and easily. However,
+for computer vision there are no equivalent solutions. It is hard to get started and be
+productive in a short span of time.
 
-Furthermore, you can easily extend the feature set thanks to the plugins system. For example, there are plugins to handle events in real-time with Kafka, use YOLOv8 models, automatically draw inference results over the original video, and many others.
+Pipeless gives you all the required pieces in one. Simply write short functions that take frames and Pipeless will run them on events.
+You can easily load industry-standard models or bring your own and load it in one of the provided inference runtimes, they are run using CPUs or GPUs out-of-the-box.
 
-As an example, you can build simple things like this:
+## How is Pipeless different?
 
-<video playsInline autoPlay muted loop>
-    <source src="https://pipeless.ai/cats.mp4" />
-    It seems your browser doesn't support the video tag.
-</video>
+We have taken technology and concepts from other fields, like serverless computing, to create what
+we think is the ideal solution for computer vision. We replaced the typical HTTP events that trigger
+serverless functions by frame events that trigger your processing code. This makes Pipeless
+to process streams in a highly parallelized environment and allows to efficently process multiple streams
+from several sources at the same time.
 
-With just these lines of code:
-
-```python copy filename="app.py"
-from pipeless_ai.lib.app.app import PipelessApp
-import cv2
-
-class App(PipelessApp):
-    def before(self):
-        xml_data = cv2.CascadeClassifier('cats.xml')
-        self.xml_data = xml_data
-
-    def process(self, frame):
-        model = self.xml_data
-	bounding_boxes = model.detectMultiScale(frame, minSize = (30, 30))
-        for box in bounding_boxes:
-            a, b, width, height = box
-            cv2.rectangle(frame, (a, b), (a + width, b + height), (255, 0, 255), 2)
-
-        return frame
-```
+So in short, Pipeless makes your code to run extreamly fast without headaches, you just write simple functions.
 
 ## Where to start?
 
-Nobody likes to read docs, so you can start by running some of the examples and checking/modifying their code. If you need more context on what is happening, you can come back to the getting started guide and learn from the basics.
+Nobody likes to read docs, so you can start by running some of the examples and playing with their code. If you need more context on what is happening, you can come back to the [getting started](/v1/getting-started) guide and learn from the basics.
 
 In the rare case in which you are one of those persons who read the docs, we hope you enjoy the guides! Any feedback on the docs is really appreciated! You can also contribute to the docs by clicking on the links at the right menu.
 
 <Cards>
-  <Card icon={<ChevronRightIcon />} title="Getting Started" href="/docs/v0/getting-started" />
-  <Card icon={<StarsIcon />} title="Examples" href="/docs/v0/examples" />
+  <Card icon={<ChevronRightIcon />} title="Getting Started" href="/v1/getting-started" />
+  <Card icon={<StarsIcon />} title="Examples" href="/v1/examples" />
 </Cards>
 
 ## Documentation Versions
@@ -59,5 +46,6 @@ In the rare case in which you are one of those persons who read the docs, we hop
 Pipeless versioning follows the semver standard, except for versions annotated with `alpha` or `beta`, which may include breaking changes without a major version bump.
 
 <Cards>
-  <Card icon={<CardsIcon />} title="V0.x.x" href="/docs/v0" />
+  <Card icon={<CardsIcon />} title="V1.x.x" href="/v1" />
+  <Card icon={<CardsIcon />} title="V0.x.x" href="/v0" />
 </Cards>

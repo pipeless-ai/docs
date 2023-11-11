@@ -1,5 +1,11 @@
 {
   "index": "Introduction",
+  "contributing": "Contributing",
+  "-- Versions": {
+    "type": "separator",
+    "title": "Versions"
+  },
+  "v1": "v1.x.x",
   "v0": "v0.x.x",
   "about": {
     "title": "Home",

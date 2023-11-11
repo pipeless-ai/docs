@@ -1,0 +1,96 @@
+# Pipeless Container Images 🐋
+
+The container images provide a way to run Pipeless out-of-the-box without having to deal with dependencies.
+
+We provide several images:
+
+* `miguelaeh/pipeless:{version}`: Default image with enough dependencies to play and test Pipeless on CPU.
+* `miguelaeh/pipeless:{version}-cuda`: Image to run Pipeless with CUDA support for running inference. When using this image you need to install the Nvidia Container Toolkit on your system.
+* `miguelaeh/pipeless:{version}-tensorrt`: Image to run Pipeless using TensorRT based GPUs. When using this image you need to install the Nvidia Container Toolkit on your system.
+
+import { Callout } from 'nextra/components'
+
+## Image Usage
+
+Print help command:
+
+```bash copy
+docker run --rm miguelaeh/pipeless --help
+```
+
+Create a new project locally:
+
+```bash copy
+docker run --rm -v /your/project/dir:/app miguelaeh/pipeless init --template <template> my_project
+```
+<Callout>
+Note you must mount as volume your project directory, since a new folder will be generated for your application.
+The rest of the commands take the actual application directory.
+</Callout>
+
+Start Pipeless:
+
+```bash copy
+docker run --rm -v /your/project/dir:/app miguelaeh/pipeless start --stages-dir /app
+```
+
+### GPU usage with CUDA
+
+Use the image `miguelaeh/pipeless:latest-cuda`. To properly use CUDA inside the container, your host system needs to have `nvidia-container-toolkit` installed. Run the following commands to install it:
+
+```bash copy
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+  && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+    sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list \
+  && \
+    sudo apt-get update \
+  && sudo apt-get install -y nvidia-container-toolkit
+```
+
+Then restart the docker daemon to load the toolkit:
+
+```bash copy
+systemctl restart docker
+```
+
+Finally, run the image by providing the `--gpus all` option:
+
+```bash copy
+docker run --gpus all -v /your/project/dir:/app  miguelaeh/pipeless:latest-cuda start
+```
+
+To verify the image is recognizing the GPU you can use the `nvidia-smi` command as follows:
+
+```bash copy
+docker run --gpus all --entrypoint nvidia-smi miguelaeh/pipeless:latest-cuda
+```
+
+### Install Custom Python Packages
+
+Sometimes, your app may require Python packages that are not installed by default into the pipeless container. You can use the `PIPELESS_USER_PYTHON_PACKAGES` variable to automatically install them on start. You can specify them as a list separated by commas (`,`), semicolons (`;`) or spaces (` `). For example:
+
+```bash copy
+docker run --rm -e "PIPELESS_USER_PYTHON_PACKAGES=opencv-python;some_other_package,another_one" miguelaeh/pipeless start
+```
+
+### Important Notes
+
+If you want to store the processed media in a file, it must be done in a path under `/app`. For example, when providing a stream use `--output-uri 'file:///app/my_output_file.mp4'`.
+Furthermore, the directory mounted at `/app` (i.e. `/your/project/dir` on the above examples) must have write permissions for the `root` group.
+
+## Docker compose usage
+
+The `docker-compose.yaml` file allows you to automatically deploy your application locally as if it would be deployed to the cloud.
+
+Start docker-compose:
+
+```bash copy
+APP_DIR=/your/project/dir docker compose up
+```
+
+Stop the docker-compose:
+
+```bash copy
+APP_DIR=/your/project/dir docker compose down -v
+```

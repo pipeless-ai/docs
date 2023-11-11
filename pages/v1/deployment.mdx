@@ -1,0 +1,34 @@
+import { Callout } from 'nextra/components'
+
+# Deploying your Pipeless application
+
+There are two main kinds of deployments supported:
+
+* **Edge**: Run Pipeless directly within a device. Edge deployments are typically used when your streams contain privacy sensitive information, when the application requires really fast response times where the milliseconds added by a cloud deployment cannot be assumed, or simply when your device does not have an internet connection.
+* **Cloud**: Pipeless runs on the cloud and you just need to send the streams. Typically used when some milliseconds of latency do not affect your application. It offers higher flexibility, lower costs, higher scalability and easier management.
+
+# Deploying to the edge
+
+Right now, Pipeless is able to run on any device that is able to use a Python runtime or a container runtime.
+
+To run Pipeless directly in a device you can either use one of the Docker images, which already ship all the required software and packages, or you can install Python and the Pipeless dependencies on the device by yourself.
+
+You can use `v4l2` as `input-uri` when adding streams to read from the device webcam directly.
+
+# Deploying to the cloud
+
+Deploying Pipeless to the cloud can be done in several ways. You can deploy a VM and run Pipeless inside it or you can deploy it in a containerized way.
+
+We provide a [Pipeless Helm Chart](https://github.com/pipeless-ai/pipeless/tree/main/package/helm-chart/pipeless) that makes it really simple to deploy Pipeless to a Kubernetes cluster with a single command. For example:
+
+```bash copy
+helm install pipeless . --set worker.application.git_repo="https://github.com/pipeless-ai/pipeless.git",worker.application.subPath="examples/onnx-yolo",worker.plugins.order="draw",worker.inference.model_uri="file:///app/yolov8n.onnx" --set worker.replicaCount=4
+```
+
+> Note this command requires you to have the Helm Chart in the current directory.
+
+Check out this guide about [deploying Pipeless with Kubernetes and Helm](https://www.pipeless.ai/blog/deploy-with-kubernetes/Deploying%20an%20object%20detection%20application%20to%20the%20cloud%20using%20Kubernetes%20and%20Helm).
+
+<Callout>
+The Pipeless Helm chart is not yet updated for Pipeless `1.x`, it still uses version `0.x`.
+</Callout>

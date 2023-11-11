@@ -1,0 +1,63 @@
+# Cats Recognition with Pipeless
+
+This example contains a Pipeless stage to recognize cats.
+
+import { Steps, Callout } from 'nextra/components';
+
+## Requirements
+
+* Pipeless: Check the [installation guide](/v1/getting-started/installation).
+
+* Python OpenCV package. Install it by running:
+
+```bash copy
+pip install opencv-python
+```
+
+## Run the example
+
+<Steps>
+
+### Create an empty Pipeless project
+
+```bash copy
+pipeless init my-project
+cd my-project
+```
+
+> Feel free to change `my-project` by any name you want.
+
+### Download the stage folder
+
+```bash copy
+wget -O - https://github.com/pipeless-ai/pipeless/archive/main.tar.gz | tar -xz --strip=2 "pipeless-main/examples/cats"
+```
+
+### Update the XML file path inside `init.py`
+
+Update the line highlighted below to the actual path in your system (use an absolute path):
+
+```diff {3}filename="init.py"
+def init():
+    return {
+        'model': cv2.CascadeClassifier('/home/path/my-project/cats/cats.xml')
+    }
+```
+
+### Start Pipeless
+
+The following command leaves Pipeless running on the current terminal
+
+```bash copy
+pipeless start --stages-dir .
+```
+
+### Provide a stream
+
+Open a new terminal and run:
+
+```bash copy
+pipeless add stream --input-uri "https://pipeless-public.s3.eu-west-3.amazonaws.com/cats.mp4" --output-uri "screen" --frame-path "cats"
+```
+
+</Steps>

@@ -1,0 +1,58 @@
+# YOLOv8 - detection, segmentation and pose estimation with Pipeless
+
+import { Steps, Callout } from 'nextra/components';
+
+This example makes use of the Pipeless YOLOv8 plugin to perform object detection.
+
+<Callout>
+This example uses YOLOv8 by importing the Ultralytics Python library, unlinke the `onnx-yolo` example, which loads the YOLO model into the ONNX Runtime.
+</Callout>
+
+## Requirements
+
+* Pipeless: Check the [installation guide](/v1/getting-started/installation).
+
+* Python OpenCV, NumPy and Ultralytics packages. Install them by running:
+
+```bash copy
+pip install opencv-python numpy ultralytics
+```
+
+## Run the example
+
+<Steps>
+
+### Create an empty Pipeless project
+
+```bash copy
+pipeless init my-project
+cd my-project
+```
+
+> Feel free to change `my-project` by any name you want.
+
+### Download the stage folder
+
+```bash copy
+wget -O - https://github.com/pipeless-ai/pipeless/archive/main.tar.gz | tar -xz --strip=2 "pipeless-main/examples/yolo"
+```
+
+### Start Pipeless
+
+The following command leaves Pipeless running on the current terminal
+
+```bash copy
+pipeless start --stages-dir .
+```
+
+### Provide a stream
+
+Open a new terminal and run:
+
+```bash copy
+pipeless add stream --input-uri "v4l2" --output-uri "screen" --frame-path "yolo"
+```
+
+This command assumes you have a webcam available, if you don't just change the input URI.
+
+</Steps>

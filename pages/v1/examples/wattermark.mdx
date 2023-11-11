@@ -1,0 +1,66 @@
+# Adding wattermarks to a video
+
+import { Steps, Callout } from 'nextra/components';
+
+This stage simply edits a video on the fly to add some text and show the modified video on the screen.
+
+## Requirements
+
+* Pipeless: Check the [installation guide](/v1/getting-started/installation).
+
+* Python NumPy and Pillow packages. Install them by running:
+
+```bash copy
+pip install numpy pillow
+```
+
+## Run the example
+
+<Steps>
+
+### Create an empty Pipeless project
+
+```bash copy
+pipeless init my-project
+cd my-project
+```
+
+> Feel free to change `my-project` by any name you want.
+
+### Download the stage folder
+
+```bash copy
+wget -O - https://github.com/pipeless-ai/pipeless/archive/main.tar.gz | tar -xz --strip=2 "pipeless-main/examples/wattermark"
+```
+
+### Update the XML file path inside `init.py`
+
+Update the line highlighted below to the actual path in your system (use an absolute path):
+
+```diff {4}filename="process.py"
+def hook(frame, context):
+     pil_image = Image.fromarray(frame['modified'])
+     text = "Hello pipeless!"
+     font = ImageFont.truetype(font='/home/path/pipeless/examples/wattermark/font.ttf', size=60)
+     text_color = (255, 0, 255)
+```
+
+### Start Pipeless
+
+The following command leaves Pipeless running on the current terminal
+
+```bash copy
+pipeless start --stages-dir .
+```
+
+### Provide a stream
+
+Open a new terminal and run:
+
+```bash copy
+pipeless add stream --input-uri "v4l2" --output-uri "screen" --frame-path "wattermark"
+```
+
+This command assumes you have a webcam available, if you don't just change the input URI.
+
+</Steps>

@@ -1,0 +1,8 @@
+{
+    "wattermark": "Adding wattermarks",
+    "cats": "Detecting Cats on a Video",
+    "tf-pose": "Pose detection with TensorFlow",
+    "yolov8": "Object detection - YOLOv8 Python lib",
+    "onnx-candy": "ONXX Runtime - Candy filter",
+    "onnx-yolo": "ONNX Runtime - Object detection with YOLO"
+}

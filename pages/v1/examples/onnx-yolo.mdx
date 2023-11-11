@@ -1,0 +1,75 @@
+# ONNX Runtime - Object detection with YOLO
+
+import { Steps, Callout } from 'nextra/components';
+
+This example makes use of the ONNX Runtime to run object detection using a YOLO model.
+
+The YOLO ONNX model was obtained by simply exporting the YOLOv8n model to the ONNX format.
+
+<Callout>
+For some unknown reason, exporting YOLO to ONNX does not work at the speed it should nor with the accuracy it should. We
+are trying to figure out this error with the Ultralytics team. However, the example can still serve you as guide to use the
+included ONNX Runtime.
+See also the [candy example](/v1/examples/onnx-candy), which works without problems.
+</Callout>
+
+## Requirements
+
+* Pipeless: Check the [installation guide](/v1/getting-started/installation).
+
+* Python OpenCV and NumPy packages. Install them by running:
+
+```bash copy
+pip install opencv-python numpy
+```
+
+## Run the example
+
+<Steps>
+
+### Create an empty Pipeless project
+
+```bash copy
+pipeless init my-project
+cd my-project
+```
+
+> Feel free to change `my-project` by any name you want.
+
+### Download the stage folder
+
+```bash copy
+wget -O - https://github.com/pipeless-ai/pipeless/archive/main.tar.gz | tar -xz --strip=2 "pipeless-main/examples/onnx-yolo"
+```
+
+### (Optional) If you have CUDA or TensorRT installed you can enable them at `process.json`
+
+```json {5}filename="process.json"
+{
+    "runtime": "onnx",
+    "model_uri": "https://pipeless-public.s3.eu-west-3.amazonaws.com/yolov8n.onnx",
+    "inference_params": {
+        "execution_provider": "tensorrt"
+    }
+}
+```
+
+### Start Pipeless
+
+The following command leaves Pipeless running on the current terminal
+
+```bash copy
+pipeless start --stages-dir .
+```
+
+### Provide a stream
+
+Open a new terminal and run:
+
+```bash copy
+pipeless add stream --input-uri "v4l2" --output-uri "screen" --frame-path "onnx-yolo"
+```
+
+This command assumes you have a webcam available, if you don't just change the input URI.
+
+</Steps>

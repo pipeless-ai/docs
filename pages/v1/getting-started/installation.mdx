@@ -53,7 +53,8 @@ brew install gstreamer
 ### Installation 🛠️
 
 Pipeless has an installer script that automatically grabs the latest version and installs it locally.
-In case we have not published Pipeless for your operating system or architecture the script will try to build it on the fly.
+In case there is not a pre-built binary for your target OS or architecture the script will try to build Pipeless from source.
+In case Pipeless needs to built from source, the script will guide you on installing required dependencies.
 
 ```bash copy
 curl https://raw.githubusercontent.com/pipeless-ai/pipeless/main/install.sh | bash
@@ -66,6 +67,10 @@ curl -fsSL -o install_pipeless.sh https://raw.githubusercontent.com/pipeless-ai/
 chmod 700 install_pipeless.sh
 ./install_pipeless.sh
 ```
+
+<Callout>
+Remember to add the commands shown at the end of the installation to your shell configuration file, so Pipeless can be run in future shell sessions.
+</Callout>
 
 Finally, test the installation with:
 
@@ -82,3 +87,34 @@ docker run miguelaeh/pipeless --help
 ```
 
 Find the whole container documentation [here](/v1/container).
+
+## Building from source
+
+Apart from the Pipeless dependencies listed in the [requirements](#requirements) you need to install `pkg-config` and `cargo`.
+
+Once the dependencies are installed run the following from the root of the Pipeless repository:
+
+### Linux:
+
+```bash copy
+export PIPELESS_INSTALL_DIR="${HOME}/.pipeless"
+cargo build --all --release --manifest-path pipeless/Cargo.toml
+mv pipeless/target/release/pipeless-ai pipeless/target/release/pipeless
+strip pipeless/target/release/pipeless
+mv pipeless/target/release/{pipeless,libonnxruntime*} "${PIPELESS_INSTALL_DIR}/"
+```
+
+Include `PIPELESS_INSTALL_DIR` in your `PATH` **and** `LD_LIBRARY_PATH`.
+
+### macOS
+
+```bash copy
+export PIPELESS_INSTALL_DIR="${HOME}/.pipeless"
+cargo build --all --release --manifest-path pipeless/Cargo.toml
+mv pipeless/target/release/pipeless-ai pipeless/target/release/pipeless
+strip pipeless/target/release/pipeless
+mv pipeless/target/release/{pipeless,libonnxruntime*} "${PIPELESS_INSTALL_DIR}/"
+install_name_tool -add_rpath @executable_path "${PIPELESS_INSTALL_DIR}/pipeless"
+```
+
+Include `PIPELESS_INSTALL_DIR` in your `PATH`.

@@ -2,6 +2,8 @@ import React from 'react'
 import Image from 'next/image'
 import { DocsThemeConfig } from 'nextra-theme-docs'
 import { BsDiscord } from 'react-icons/bs';
+import { useRouter } from 'next/router';
+import { useConfig } from 'nextra-theme-docs';
 
 const config: DocsThemeConfig = {
   logo: <span style={{display: "flex", alignItems: "center"}}><Image alt="logo" width={30} height={30} src="/docs/logo-400x400-rounded.png" />&nbsp;<b>Pipeless</b></span>,
@@ -21,13 +23,25 @@ const config: DocsThemeConfig = {
   search: {
     loading: "Loading...",
   },
-  head: (
-    <>
-      <meta property="og:image" content="https://www.pipeless.ai/docs/logo-400x400-rounded.png" />
-      <meta property="og:title" content="Pipeless Documentation" />
-      <meta property="og:description" content="Documentation about the Pipeless computer vision framework" />
-    </>
-  ),
+  head: () => {
+    const { asPath, defaultLocale, locale } = useRouter();
+    const { frontMatter } = useConfig();
+    const url =
+      'https://www.pipeless.ai' +
+      (defaultLocale === locale ? asPath : `/${locale}${asPath}`)
+
+    return (
+      <>
+        <meta property="og:url" content={url} />
+        <meta property="og:title" content={frontMatter.title || 'Pipeless Documentation'} />
+        <meta
+          property="og:description"
+          content={frontMatter.description || "Documentation about Pipeless, the computer vision framework"}
+        />
+        <meta property="og:image" content="https://www.pipeless.ai/docs/logo-400x400-rounded.png" />
+      </>
+    )
+  },
   useNextSeoProps() {
     return {
       titleTemplate: '%s – Pipeless'

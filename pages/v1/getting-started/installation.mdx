@@ -12,7 +12,7 @@ You have two options when using Pipeless:
 
 ### Requirements ☝️
 
-* Python (tested with version `3.10.12`)
+* Python 
 * **Gstreamer 1.20.3**. Verify with `gst-launch-1.0 --gst-version`.
 
 #### Install dependencies for Linux
@@ -54,6 +54,7 @@ brew install gstreamer
 
 Pipeless has an installer script that automatically grabs the latest version and installs it locally.
 In case there is not a pre-built binary for your target OS or architecture the script will try to build Pipeless from source.
+You can also force the build from source using the `--build` flag. This is useful in cases when you want to build Pipeless linking to your specific Python version.
 In case Pipeless needs to built from source, the script will guide you on installing required dependencies.
 
 ```bash copy

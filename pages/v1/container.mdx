@@ -23,9 +23,14 @@ Create a new project locally:
 ```bash copy
 docker run --rm -v /your/project/dir:/app miguelaeh/pipeless init --template <template> my_project
 ```
+
 <Callout>
 Note you must mount as volume your project directory, since a new folder will be generated for your application.
 The rest of the commands take the actual application directory.
+</Callout>
+
+<Callout>
+The mounted volume must have `rwx` permissions for the `root` group. In Linux, the `root` group is just like any other group and by default new users belong to it. Since the Pipeless container is non-root it uses the user `1001`, thus, the required permissions allow it to created content in the mounted volume.
 </Callout>
 
 Start Pipeless:

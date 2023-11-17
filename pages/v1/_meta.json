@@ -2,7 +2,7 @@
     "getting-started": "🚀 Getting Started",
     "formats": "Stream Formats and Protocols",
     "inference": "Inference Runtimes",
-    "kv_store": "Key-Value Store",
+    "kvstore": "Key Value Store",
     "container": "🐋 Container images",
     "deployment": "Deploying your application",
     "models": "Ready to Use CV Models",

@@ -16,7 +16,7 @@ const config: DocsThemeConfig = {
     link: 'https://discord.gg/K2qxQ8uedG',
     icon: <BsDiscord size={25} />
   },
-  docsRepositoryBase: 'https://github.com/pipeless-ai/docs',
+  docsRepositoryBase: 'https://github.com/pipeless-ai/docs/tree/main',
   footer: {
     text: <p>Pipeless Docs - Copyright &copy; 2023</p>,
   },

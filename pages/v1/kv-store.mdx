@@ -1,0 +1,46 @@
+---
+title: Key-Value Store usage
+description: Learn to how use the included key value store to communicate data between the processing of different frames and the execution of different hooks
+---
+
+import { Callout } from 'nextra/components'
+
+# Key-Value Store usage
+
+Pipeless contains a key-value store that helps you in the cases when you need to share data
+between the execution of different frames or between the execution of different hooks within a stage.
+
+<Callout>
+Note that stages are independent, so a stage cannot access the KV pairs set by a different stage.
+</Callout>
+
+## Setting and getting pairs from the KV store
+
+To interact with the KV store you can use some functions that are embedded into your code and
+ready to use, so you don't even need to import them.
+
+### Setting a pair
+
+To set a new pair you can call the function `pipeless_kvs_set` providing the key and the value:
+
+```python copy
+pipeless_kvs_set("my_key", "My value")
+```
+
+The set function converts any value into string before inserting it into the store. And the [get function](#getting-a-pair) returns always a string.
+
+### Getting a pair
+
+To get a pair from the store you can call the function `pipeless_kvs_get` providing the key to fetch.
+
+Due to the parallelized nature of Pipeless, **you must always check the value obtained** from the get function.
+When the key requested has not been set it will return an empty string. This may happen when your code tries to get
+data from a previous frame that is being processed at the same time.
+
+```python copy
+value = pipeless_kvs_get("my_key")
+if not value:
+   printf("There is no key set")
+else
+   printf(f"Obtained value: {value}")
+```

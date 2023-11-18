@@ -27,6 +27,12 @@ Within each stage folder you create the files that define your Pipeless **hooks*
 processing step in the stage micro pipeline (i.e. pre-processing, processing or post-processing). All of them
 are optional and you can implement them in **several programming languages**.
 
+Finally, each stage is isolated from the others. Every hook of a stage receives a structure that contains
+[several fields](#frame-data-fields), we usually call it the "frame data". You can perform changes on the
+frame data fields (some of them are read-only). Next hooks of the stage or the hooks of a following stage
+will have access to the modified data. Ideally, you should design your stages so that they are self-contained
+and do not depend on other stages data.
+
 ## Create a new project
 
 Run the following command:

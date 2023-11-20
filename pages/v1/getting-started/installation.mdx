@@ -16,8 +16,13 @@ You have two options when using Pipeless:
 
 ### Requirements ☝️
 
-* Python
+* Python.
 * **Gstreamer 1.20.3**. Verify with `gst-launch-1.0 --gst-version`.
+
+<Callout>
+Please note that the pre-built binaries are linked to specific Python versions. `3.10` for Linux, `3.12` for macOS.
+If your installed version is different provide `--build` to the installation script.
+</Callout>
 
 #### Install dependencies for Linux
 
@@ -42,8 +47,6 @@ You have two options when using Pipeless:
 
 #### Install dependencies for macOS
 
-The latest version of macOS (Ventura) comes with Python `3.9` by default. You can install version `3.10` with:
-
 ```bash copy
 brew install python
 ```
@@ -57,6 +60,7 @@ brew install gstreamer
 ### Installation 🛠️
 
 Pipeless has an installer script that automatically grabs the latest version and installs it locally.
+The script can also be used to easily update to new versions.
 In case there is not a pre-built binary for your target OS or architecture the script will try to build Pipeless from source.
 You can also force the build from source using the `--build` flag. This is useful in cases when you want to build Pipeless linking to your specific Python version.
 In case Pipeless needs to built from source, the script will guide you on installing required dependencies.
@@ -99,7 +103,7 @@ Apart from the Pipeless dependencies listed in the [requirements](#requirements)
 
 Once the dependencies are installed run the following from the root of the Pipeless repository:
 
-### Linux:
+### Linux
 
 ```bash copy
 export PIPELESS_INSTALL_DIR="${HOME}/.pipeless"

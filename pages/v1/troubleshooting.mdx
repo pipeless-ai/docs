@@ -5,14 +5,9 @@ description: General guidance and common issues when running your Pipeless appli
 
 # Troubleshooting 🐞
 
-* If a stream processing doesn't start and there is no apparent error shown by Pipeless run the following command changing `<path>` by your file path:
+## Python can't find installed pip packages
 
-```bash copy
-GST_DEBUG="*:3,GstVaapiPostproc:7,GstGLUploadElement:7" gst-launch-1.0 uridecodebin uri=<path>.mp4 ! glimagesink
-```
-
-If you find errors or warnings on the output related to hardware acceleration it may be due to a GStreamer bug. Remove the `gstreamer1.0-vaapi` package and it should work:
-
-```console
-apt-get remove gstreamer1.0-vaapi
-```
+When you installed some pip package and Pipeless reports that they can't be found, most likely your `pip` binary is
+linked to a different Python version than the `pipeless` binary.
+The easiest way to solve this is to re-install pipeless providing the `--build` flag to the installation
+script. You can also re-run the `pip install` with the correct pip binary usually available under `/usr/bin/pip3.X` where `x` is the Python minor version.

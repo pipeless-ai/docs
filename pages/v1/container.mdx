@@ -67,7 +67,7 @@ systemctl restart docker
 Finally, run the image by providing the `--gpus all` option:
 
 ```bash copy
-docker run --gpus all -v /your/project/dir:/app  miguelaeh/pipeless:latest-cuda start
+docker run --gpus all -v /your/project/dir:/app  miguelaeh/pipeless:latest-cuda start --stages-dir /app
 ```
 
 To verify the image is recognizing the GPU you can use the `nvidia-smi` command as follows:
@@ -81,7 +81,7 @@ docker run --gpus all --entrypoint nvidia-smi miguelaeh/pipeless:latest-cuda
 Sometimes, your app may require Python packages that are not installed by default into the pipeless container. You can use the `PIPELESS_USER_PYTHON_PACKAGES` variable to automatically install them on start. You can specify them as a list separated by commas (`,`), semicolons (`;`) or spaces (` `). For example:
 
 ```bash copy
-docker run --rm -e "PIPELESS_USER_PYTHON_PACKAGES=opencv-python;some_other_package,another_one" miguelaeh/pipeless start /app
+docker run --rm -e "PIPELESS_USER_PYTHON_PACKAGES=opencv-python;some_other_package,another_one" miguelaeh/pipeless start --stages-dir /app
 ```
 
 ### Important Notes

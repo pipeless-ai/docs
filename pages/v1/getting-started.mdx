@@ -13,12 +13,12 @@ import { Callout, Tabs } from 'nextra/components'
 
 A Pipeless project is structured in **stages**. Each stage is a like a box that performs a very specific
 task. You can think about a stage like a micro pipeline. Within each stage you can implement pre-processing,
-processing and post-processing, as well as run models. Stages run in parallel so you should split your code
-logically in as many stages as possible to leverage full speed.
+processing and post-processing, as well as run models.
 
 When you provide a new stream to Pipeless, you have to specify a sorted list of stages. We call that list
 the "**frame execution path**" or just the **frame path**, and it represents the whole pipeline that the
-frames of that stream will go through. A single stage can be used in as many streams as you need.
+frames of that stream will go through. Execution paths are run in parallel for all frames, no matter which
+stream the frame belongs to. A single stage can be used in as many streams as you need.
 
 A Pipeless project consists of **at least** one stage. So your project will be a directory where each
 sub-directory defines a stage.

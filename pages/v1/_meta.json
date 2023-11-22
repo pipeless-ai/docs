@@ -7,5 +7,7 @@
     "deployment": "Deploying your application",
     "models": "Ready to Use CV Models",
     "examples": "🌟 Examples",
-    "changes": "Version Notable Changes"
+    "benchmark": "Benchmark",
+    "changes": "Version Notable Changes",
+    "troubleshooting": "Troubleshooting"
 }

@@ -1,0 +1,43 @@
+---
+title: Benchmark
+description: A benchmark obtained by running the Pipeless computer vision framework on different devices to measure the overhead
+---
+
+# Benchmark
+
+The following is a list of results from testing Pipeless with the same inputs on different
+devices.
+
+Note that Pipeless serves as the "glue" between your provided code functions so it does not affect
+the speed of the code you provide or the inference times (apart from handling parallelization for you).
+You will see those average values as constants in the results below for each specific platform tested.
+This benchmark aims to measure the overhead added by Pipeless versus an ideal
+situation where the "glue" of your code has zero latency (note that is not possible).
+
+The following defines the stream that was used in all the cases:
+
+* Input stream from file
+* Output stream to a file
+* Loading the stage from the [YOLO example with Ultralytics SDK](/v1/examples/yolov8)
+
+## CPU only laptop (2016), 4 logical CPU (2 Physical), 8 GB RAM, Ubuntu 22.04
+
+* Pre-process avg. time: `0ms`
+* Process (inference) avg. time: `152ms`
+* Post-process avg. time: `3.3ms`
+
+* Hypothetical ideal FPS: `6.43` (`1/ ((152 + 3.3)/1000)`)
+* Actual FPS: `6.17`. Pipeless added on avg `1.2ms` per frame
+
+## Tesla T4 15Gb, 8vCPU, 32GB RAM, Ubuntu 18.04
+
+* Pre-process avg. time: `0ms`
+* Process (inference) avg. time: `10ms`
+* Post-process avg. time: `1ms`
+
+* Hypothetical ideal FPS: `90` (`1/ ((10 + 1)/1000)`)
+* Actual FPS: `76.4`. Pipeless added on avg `2ms` per frame
+
+## Nvidia Jetson Xavier NX, Jetpack 4.6
+
+TODO

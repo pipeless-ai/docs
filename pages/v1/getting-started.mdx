@@ -181,3 +181,39 @@ The following is an example of using the ONNX runtime with the CPU execution pro
     }
 }
 ```
+
+### Stateless vs Stateful hooks
+
+Pipeless allows to create two kinds of hooks:
+
+* `stateless` (default): Stateless hooks can run at the same time for different frames.
+    Stateless hooks should be used when an internal state is not required. For example, if you implement some pre-processing as a simple resize your hook does not
+    require an internal state.
+
+* `stateful`: Stateful hooks are the kind of hook you want to use when some internal state is required. A good example of when to use a stateful hook is
+    when you use an object tracking model, since these models maintain internal state. Stateful hooks introduce extra latency compared to stateless
+    hooks, since the internal state is locked and released on each frame to avoid corrupting the internal state.
+
+By default all hooks are `stateless` unless you specify they aren't. As a general rule, use `stateless` hooks unless you need a hook to preserve some internal state, then you need to use `stateful` hooks.
+
+To indicate a hook must be `stateful` add a comment to the top of the file as follows (the comment **must be the first line**).
+
+```python filename="pre-process.py"
+# make stateful
+
+def hook(frame_data, context):
+    ...
+```
+
+When using `json` hooks, include a boolean `make_stateful` field at the JSON root:
+
+```json filename="process.json"
+{
+    "make_stateful": true,
+    "runtime": "onnx",
+    "model_uri": "https://pipeless-public.s3.eu-west-3.amazonaws.com/yolov8n.onnx",
+    "inference_params": {
+        "execution_provider": "cpu"
+    }
+}
+```

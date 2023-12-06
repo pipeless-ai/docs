@@ -84,6 +84,14 @@ Sometimes, your app may require Python packages that are not installed by defaul
 docker run --rm -e "PIPELESS_USER_PYTHON_PACKAGES=opencv-python;some_other_package,another_one" miguelaeh/pipeless start --stages-dir /app
 ```
 
+To avoid installing packages every time you run the image mount a volume at `/.venv`:
+
+```bash copy
+mkdir /tmp/venv
+sudo chown 1001 /tmp/venv # Give the proper permissions for the non-root image
+docker run --rm -v "/tmp/venv:/.venv" -v "/tmp/app:/app" -e "PIPELESS_USER_PYTHON_PACKAGES=opencv-python;some_other_package,another_one" miguelaeh/pipeless start --stages-dir /app
+```
+
 ### Important Notes
 
 If you want to store the processed media in a file, it must be done in a path under `/app`. For example, when providing a stream use `--output-uri 'file:///app/my_output_file.mp4'`.

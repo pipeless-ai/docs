@@ -1,0 +1,24 @@
+---
+title: Processing Restart Policy
+description: Documentation about the restart policy for stream processing
+---
+
+# Restart Policy
+
+The restart policy allows you to indicate if and when the processing of a stream should restart. The main
+events that may occur when processing a stream are an error or reaching its end.
+
+For example, if Pipeless is reading a stream via RTSP, an error may occur if the connection fails. On
+the other hand, if the RTSP source stops sending the stream, Pipeless will eventually reach the end of the
+stream after processing the last frame. After the end of a stream, the RTSP source could start producing a
+second stream that you may also want to process.
+
+You can specify the restart policy when adding or updating a stream via the `--restart-policy`
+option of the CLI or the `restart_policy` field of the JSON payload when using the REST API.
+
+The possible values are:
+
+* `Never` (default): indicates that the processing won't be restarted.
+* `OnError`: indicates that the processing will restart when it stops due to an error.
+* `OnEos`: indicates that the processing will restart when it reaches the end of the stream in order to start processing any possible new stream.
+* `Always`: indicates that the processing will restart always, regardless of the cause of the stop.

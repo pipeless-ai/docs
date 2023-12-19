@@ -1,0 +1,25 @@
+---
+title: Pipeless REST API
+description: Documentation about the endpoints exposed by a running Pipeless instance
+---
+
+# Pipeless REST API
+
+This section of the docs describes the available endpoints that are available for a running Pipeless instance.
+
+When you start a Pipeless instance you can manage its resources via the CLI but also via the
+REST API. Actually, the CLI is a wrapper around the REST API.
+
+By default Pipeless uses port `3030` and listens  at `0.0.0.0`. That means Pipeless is available from all the network interfaces of the machine.
+The URL and port to use is also shown at the top of the Pipeless logs, just after loading the stages.
+
+## Endpoints
+
+### `/streams`
+
+| Method   | Endpoint | Description |
+| -------- | -------- | ----------- |
+| `GET`    | `/`      | Returns the complete list of streams that Pipeless is aware of. Each stream includes `id`, `input_uri`, `output_uri`, `frame_path` and `restart_policy`, among other fields. |
+| `POST`   | `/`      | Creates a new stream. It must contain `input_uri`, `output_uri`, `frame_path` and optionally `restart_policy` (`never` by default). |
+| `PUT`    | `/<id>`  | Updates a stream identified by `<id>`. It can contain `input_uri`, `output_uri`, `frame_path` or `restart_policy`. |
+| `DELETE` | `/<id>`  | Deletes the stream represented by the specified `<id>`. |

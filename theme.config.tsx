@@ -18,7 +18,7 @@ const config: DocsThemeConfig = {
   },
   docsRepositoryBase: 'https://github.com/pipeless-ai/docs/tree/main',
   footer: {
-    text: <p>Pipeless Docs - Copyright &copy; 2023</p>,
+    text: <p>Copyright &copy; 2023 Pipeless, Inc.</p>,
   },
   search: {
     loading: "Loading...",

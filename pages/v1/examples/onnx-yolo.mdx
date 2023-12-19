@@ -12,9 +12,9 @@ This example makes use of the ONNX Runtime to run object detection using a YOLO 
 The YOLO ONNX model was obtained by simply exporting the YOLOv8n model to the ONNX format.
 
 <Callout>
-Due to a poor implementation of the post-processing in this example it may seem to take more time than the Ultralytics SDK, however,
-you can verify the inference times are the same. The differences come from the pre and post-processing Python implementation of this example.
-This example is just a guide about how to use the ONNX runtime, you should not use it in production because the results will be poor due to the stated reason
+This example was created to demonstrate how to load an ONNX model in Pipeless, thus, the post-processing code is not optimized.
+You can verify that the actual inference times on this example (ONNX Runtime) and the example that uses the Ultralytics
+SDK (Pytorch) are exactly the same, the only difference is in the post-processing implementation.
 </Callout>
 
 ## Requirements

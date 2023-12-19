@@ -1,0 +1,71 @@
+---
+title: Play a piano with your gaze
+description: A Pipeless example that allows you play a virtual piano with your eyes by looking to the note you want to play
+---
+
+# Play a piano with your gaze (eyes)
+
+import { Steps, Callout } from 'nextra/components';
+
+In this example, we will estimate the gaze direction of a person and use it to play a virtual piano when the person looks to certain notes.
+
+<iframe src="https://www.youtube.com/embed/_FktutJ_Bik"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+/>
+
+This examples uses the Google Mediapipe library to calculate the face mask and obtain the position of the
+eyes. The calculation of the gaze diration is done with OpenCV.
+
+## Requirements
+
+* Pipeless: Check the [installation guide](/v1/getting-started/installation).
+
+* Python OpenCV and NumPy packages. Install them by running:
+
+```bash copy
+pip install opencv-python numpy
+```
+
+* Python SimpleAudio` package. Install it by running:
+
+```bash copy
+sudo apt-get install libasound2-dev # Required by simpleaudio
+pip install simpleaudio
+```
+
+## Run the example
+
+<Steps>
+
+### Create an empty Pipeless project
+
+```bash copy
+pipeless init my-project
+cd my-project
+```
+
+> Feel free to change `my-project` by any name you want.
+
+### Download the stage folder
+
+```bash copy
+wget -O - https://github.com/pipeless-ai/pipeless/archive/main.tar.gz | tar -xz --strip=2 "pipeless-main/examples/gaze-piano"
+```
+
+### Start Pipeless
+
+The following command leaves Pipeless running on the current terminal
+
+```bash copy
+pipeless start --stages-dir .
+```
+
+### Provide a stream
+
+Open a new terminal and run the following command to provide a stream from your webcam:
+
+```bash copy
+pipeless add stream --input-uri "v4l2" --output-uri "screen" --frame-path "gaze-piano"
+```
+
+</Steps>

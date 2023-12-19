@@ -1,5 +1,6 @@
 {
     "getting-started": "🚀 Getting Started",
+    "rest-api": "Pipeless REST API",
     "formats": "Stream Formats and Protocols",
     "inference": "Inference Runtimes",
     "kvstore": "Key Value Store",

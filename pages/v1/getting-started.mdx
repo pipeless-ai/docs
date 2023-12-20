@@ -43,9 +43,11 @@ cd my_project
 ```
 
 The above command creates a directory for the project root and, inside it, a directory called `my-stage`,
-which contains a scaffold of a new stage.
-The stage created will be executed, but the code it contains does nothing. You can add some code there
-later getting inspiration from the [examples](/v1/examples).
+which contains a scaffold of a new stage. If you remove the `--template` option and interactive shell will
+ask you a few questions to generate the stages.
+
+The stage created can be executed correctly, but the code it contains does nothing. You can add some code later to the generated files
+getting inspiration from the [examples](/v1/examples).
 
 Let's start Pipeless and provide a stream. Run the following command from `my_project`:
 
@@ -84,6 +86,12 @@ pipeless --help
 Creating a new stage is as simple as creating a new folder. The folder name will be adopted by Pipeless as the stage name, you
 will use it when providing the frame path of a new stream.
 
+You can run the following command from inside your project directory to generate a stage and its files using the interactive shell:
+
+```bash copy
+pipeless generate stage
+```
+
 ### Stage context
 
 A stage can have its own global context. The **stage context** is provided to the hooks
@@ -112,10 +120,21 @@ for changes to take effect.
 
 ## Writting hooks
 
-A stage is composed of hooks. There are 3 types of hooks: pre-processing, processing and post-processing hooks.
-You can define hooks in several programming languages.
+A stage is composed of zero or more hooks. There are 3 kind of hooks: `pre-processing`, `processing` and `post-processing` hooks.
+Only one hook of each kind can be added to a stage.
 
-Defining a hook is as simple as creating a file containing a `hook` function that receives the frame data and the stage context (read-only).
+The `process` hook is special and it can be either implemented via code or provided as a JSON file to perform inference using one of the
+supported inference runtimes. See the [inference runtime](#inference-runtime-json-hooks) section below.
+
+To interactively create a new hook move to your project directory and run the following command:
+
+```bash copy
+pipeless generate hook
+```
+
+### Implementing a code hook
+
+Defining a code hook is as simple as creating a file containing a `hook` function that receives the frame data and the stage context (read-only).
 
 Depending on the hook type you will create a file named `pre-process.xx`, `process.xx` or `post-process.xx` where `xx`
 is the extension of the programming language.
@@ -140,13 +159,35 @@ stage initialization (`init.py`, see [section above](#creating-a-new-stage)).
 You can also see we take the RGB frame array from the frame data, run our model with it and update the `inference_output` field of the frame data.
 
 <Callout>
-Note in most cases you will not implement a `process` hook but to use an [inference runtime](#inference-runtime) instead
+Note in most cases you do not implement a `process` hook via code but instead you use an [inference runtime](#inference-runtime)
 and pass your model to it, implementing only the pre-process and post-process hooks.
 </Callout>
 
+### Inference Runtime - JSON hooks
+
+When you have a model and want to perform inference using one of the supported inference runtimes you
+use a `process.json` file.
+
+Within this JSON you define the model to use, the inference runtime and the runtime parameters.
+
+To provide the inputs you set the `inference_input` field of the frame data in your `pre-process`
+hook. And to parse the output you read the `inference_output` field from the frame data in your `post-process` hook.
+
+The following is an example of using the ONNX Runtime with the CPU execution provider:
+
+```json filename="process.json"
+{
+    "runtime": "onnx",
+    "model_uri": "https://pipeless-public.s3.eu-west-3.amazonaws.com/yolov8n.onnx",
+    "inference_params": {
+        "execution_provider": "cpu"
+    }
+}
+```
+
 ### Frame data fields
 
-The frame data provided to the hooks contains the following fields:
+The frame data provided to the hook functions contains the following fields:
 
     * `uuid`: The internal unique id of the frame.
     * `original`: An array containing the RGB pixels in format `height,width,channels`. You can read the `original` field but it is not editable.
@@ -160,39 +201,17 @@ The frame data provided to the hooks contains the following fields:
     * `inference_input`: When using an inference runtime (`process.json`) you provide the inference inputs by setting the `inference_input` field at the `pre-process` hook.
     * `inference_output`: When using an inference runtime (`process.json`) you can obtain the inference outputs by reading the `inference_output` field from the `post-process` hook.
 
-### Inference runtime
-
-When you have a model and want to perform inference on it using one of the supported inference runtimes you
-use the `process.json` hook. Note `process.json` cannot be combined with any other `process.xx` file.
-
-Within this JSON you can define the model to use, the inference runtime and the runtime parameters.
-
-To provide the inputs you will set the `inference_input` field of the frame data in your `pre-process`
-hook. And to parse the output you will read the `inference_output` field from the frame data at your `post-process` hook.
-
-The following is an example of using the ONNX runtime with the CPU execution provider:
-
-```json filename="process.json"
-{
-    "runtime": "onnx",
-    "model_uri": "https://pipeless-public.s3.eu-west-3.amazonaws.com/yolov8n.onnx",
-    "inference_params": {
-        "execution_provider": "cpu"
-    }
-}
-```
-
 ### Stateless vs Stateful hooks
 
 Pipeless allows to create two kinds of hooks:
 
-* `stateless` (default): Stateless hooks can run at the same time for different frames.
+* `stateless` (default): A stateless hook can run multiple instances of the hook at the same time for different frames.
     Stateless hooks should be used when an internal state is not required. For example, if you implement some pre-processing as a simple resize your hook does not
     require an internal state.
 
 * `stateful`: Stateful hooks are the kind of hook you want to use when some internal state is required. A good example of when to use a stateful hook is
-    when you use an object tracking model, since these models maintain internal state. Stateful hooks introduce extra latency compared to stateless
-    hooks, since the internal state is locked and released on each frame to avoid corrupting the internal state.
+    when you use an object tracking model, since these models maintain internal state. Stateful hooks introduce a bit of latency compared to stateless
+    hooks, since the internal state is locked and released on each frame to avoid corrupting it.
 
 By default all hooks are `stateless` unless you specify they aren't. As a general rule, use `stateless` hooks unless you need a hook to preserve some internal state, then you need to use `stateful` hooks.
 

@@ -59,11 +59,11 @@ brew install gstreamer
 
 ### Installation 🛠️
 
-Pipeless has an installer script that automatically grabs the latest version and installs it locally.
-The script can also be used to easily update to new versions.
+The provided installation script grabs the latest Pipeless version from the pre-built releases and installs it locally. You can use the script to either **install** or **upgrade** your Pipeless version.
 In case there is not a pre-built binary for your target OS or architecture the script will try to build Pipeless from source.
-You can also force the build from source using the `--build` flag. This is useful in cases when you want to build Pipeless linking to your specific Python version.
-In case Pipeless needs to built from source, the script will guide you on installing required dependencies.
+You can also force the build from source using the `--build` flag. 
+
+<Callout>Note the pre-built binaries of Pipeless are built against Python 3.12 for macOS and 3.10 for Linux. If you have a different Python version either update it to the mentioned ones or provide the `--build` flag to the script to build Pipeless for your installed Python version</Callout>
 
 ```bash copy
 curl https://raw.githubusercontent.com/pipeless-ai/pipeless/main/install.sh | bash

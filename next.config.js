@@ -19,5 +19,14 @@ module.exports = withNextra({
       use: ['@svgr/webpack']
     })
     return config
-  }
+  },
+  async redirects() {
+    return [
+      {
+        source: '/v0/:path*',
+        destination: '/v1/:path*',
+        permanent: true,
+      },
+    ]
+  },
 })

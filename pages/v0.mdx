@@ -5,24 +5,4 @@ description: Documentation for Pipeless versions 0.x. The open-source computer v
 
 # Index - v0.x.x
 
-import meta from './v0/_meta.json';
-import { Cards, Card } from 'nextra/components';
-import { CardsIcon, StarsIcon, ChevronRightIcon } from '../components/icons';
-
-The following are all the docs sections for Pipeless versions `v0.x.x`
-
-export const Index = () => {
-    return (
-        <Cards>
-        {
-            Object.keys(meta).map((section, key) =>
-                <Card key={key} icon={<ChevronRightIcon />}
-                    title={meta[section]} href={`/v0/${section}`}
-                />
-            )
-        }
-        </Cards>
-    );
-};
-
-<Index />
+Pipeless version `0.x.x` was deprecated on October 2023. To avoid confusions for new users we removed the old docs in January 2024 since most users had already migrated to the new version.

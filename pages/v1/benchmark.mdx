@@ -12,7 +12,7 @@ Note that Pipeless serves as the "glue" between your provided code functions so 
 the speed of the code you provide or the inference times (apart from handling parallelization for you).
 You will see those average values as constants in the results below for each specific platform tested.
 This benchmark aims to measure the overhead added by Pipeless versus an ideal
-situation where the "glue" of your code has zero latency (note that is not possible).
+situation where the "glue" of your code has zero latency (note that is not possible and that there are other processes running apart from Pipeless).
 
 The following defines the stream that was used in all the cases:
 
@@ -23,11 +23,11 @@ The following defines the stream that was used in all the cases:
 ## CPU only laptop (2016), 4 logical CPU (2 Physical), 8 GB RAM, Ubuntu 22.04
 
 * Pre-process avg. time: `0ms`
-* Process (inference) avg. time: `152ms`
+* Process (inference) avg. time: `423ms`
 * Post-process avg. time: `3.3ms`
 
-* Hypothetical ideal FPS: `6.43` (`1/ ((152 + 3.3)/1000)`)
-* Actual FPS: `6.17`. Pipeless added on avg `1.2ms` per frame
+* Hypothetical ideal FPS: `2.34` (`1/ ((423 + 3.3)/1000)`) per core. Total of `9.36` (`2.34 * 4`) FPS.
+* Actual FPS: `8`.
 
 ## Tesla T4 15Gb, 8vCPU, 32GB RAM, Ubuntu 18.04
 

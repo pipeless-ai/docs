@@ -11,3 +11,15 @@ When you installed some pip package and Pipeless reports that they can't be foun
 linked to a different Python version than the `pipeless` binary.
 The easiest way to solve this is to re-install pipeless providing the `--build` flag to the installation
 script. You can also re-run the `pip install` with the correct pip binary usually available under `/usr/bin/pip3.X` where `x` is the Python minor version.
+
+## Pipeless cannot find the ONNX Runtime library
+
+This usually happens when you are installing with a target platform for which Microsoft does not provide a pre-build ONNX runtime.
+
+In this case you will see a message similar to the following:
+
+```
+/root/.pipeless/pipeless: error while loading shared libraries: libonnxruntime.so.1.16.0: cannot open shared object file: No such file or directory
+```
+
+Please check [this section](/v1/getting-started/installation#building-onnx-runtime-from-source) of the installation guide to correctly re-install pipeless.

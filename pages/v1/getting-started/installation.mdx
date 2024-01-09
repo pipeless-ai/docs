@@ -61,7 +61,7 @@ brew install gstreamer
 
 The provided installation script grabs the latest Pipeless version from the pre-built releases and installs it locally. You can use the script to either **install** or **upgrade** your Pipeless version.
 In case there is not a pre-built binary for your target OS or architecture the script will try to build Pipeless from source.
-You can also force the build from source using the `--build` flag. 
+You can also force the build from source using the `--build` flag.
 
 <Callout>Note the pre-built binaries of Pipeless are built against Python 3.12 for macOS and 3.10 for Linux. If you have a different Python version either update it to the mentioned ones or provide the `--build` flag to the script to build Pipeless for your installed Python version</Callout>
 
@@ -101,6 +101,12 @@ Find the whole container documentation [here](/v1/container).
 
 Apart from the Pipeless dependencies listed in the [requirements](#requirements) you need to install `pkg-config` and `cargo`.
 
+<Callout>
+If Microsoft does not provide a ONNX runtime build for your target platform go to
+the [next section](/v1/getting-started/installation#building-onnx-runtime-from-source). You can check the
+ONXX Runtime releases at: https://github.com/microsoft/onnxruntime/releases
+</Callout>
+
 Once the dependencies are installed run the following from the root of the Pipeless repository:
 
 ### Linux
@@ -127,3 +133,63 @@ install_name_tool -add_rpath @executable_path "${PIPELESS_INSTALL_DIR}/pipeless"
 ```
 
 Include `PIPELESS_INSTALL_DIR` in your `PATH`.
+
+## Building ONNX Runtime from source
+
+When you build Pipeless it will automatically download and link to a pre-built ONNX Runtime library obtained from the Microsoft releases.
+However, it may happen that Microsoft does not release a pre-built library for your target platform. When that's the case, please follow the below instructions to build both ONNX Runtime and Pipeless.
+
+First, clone the ONNX Runtime repo as follows and move to the proper branch:
+
+```bash copy
+git clone https://github.com/microsoft/onnxruntime.git
+cd onnxruntime
+git checkout v1.16.3
+git submodule update
+```
+
+Then, build it as follows:
+
+<Callout>
+If you get out-of-memory running the following command remove the `--parallel` option or change it to a low value such as `--parallel 2`. It will take significantly more time to build, but you will not run out of memory.
+</Callout>
+
+```bash copy
+# You can remove CUDA and Cudnn flags if you do not plan to use CUDA.
+bash build.sh --parallel --build_shared_lib --config Release --use_cuda --cuda_home /usr/local/cuda/ --cudnn_home /usr/lib/aarch64-linux-gnu/
+```
+
+Now let's move the built library into the Pipeless install directory. Run the following, still from inside the ONNX repo root:
+
+```bash copy
+mkdir ~/.pipeless
+cp ./build/Linux/Release/libonnxruntime*.so ~/.pipeless/
+```
+
+Now, move out of the ONNX runtime repository and clone the Pipeless repository:
+
+```bash copy
+cd ..
+git clone https://github.com/pipeless-ai/pipeless.git
+cd pipeless
+```
+
+Build Pipeless with the following command, which will link it to the ONNX Runtime library you built before:
+
+```bash copy
+ORT_STRATEGY=system ORT_LIB_LOCATION=~/.pipeless/ cargo build --manifest-path pipeless/Cargo.toml --release
+mv pipeless/target/release/pipeless-ai pipeless/target/release/pipeless
+strip pipeless/target/release/pipeless
+cp pipeless/target/release/pipeless ~/.pipeless/
+```
+
+Finally run the following so you can start using Pipeless:
+
+```bash copy
+export PATH="${HOME}/.pipeless:${PATH}"
+export LD_LIBRARY_PATH="${HOME}/.pipeless:${LD_LIBRARY_PATH}"
+```
+
+<Callout>
+Copy paste the above commands in your `~/.bashrc` or whatever file you use so Pipeless can be used in future sessions
+</Callout>

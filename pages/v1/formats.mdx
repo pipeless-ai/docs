@@ -25,6 +25,10 @@ Pipeless supports almost **any protocol and format** (with several codecs) as in
 Supported input protocols: `v4l2` (for device webcam), `file`, `http(s)`, `rtmp`, `rtsp`, `rtp`, `tcp`, `udp`, `ftp`, ...
 Supported input formats: `mp4`, `webm`, `mkv`, ... (several codecs supported for all of them)
 
+#### Select input camera
+
+You can use `v4l2:/dev/videoX` where `X` is the index of the device as input URI to select the input device when you have multiple cameras. For example, `v4l2:/dev/video0`. If you provide `v4l2` without specifying the device it will fallback to `/dev/video0`.
+
 ### Output
 
 When the output video is enabled, the following table describes the supported combinations of protocols and formats. New output protocols and formats are added constantly.

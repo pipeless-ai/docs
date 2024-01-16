@@ -185,11 +185,20 @@ cp pipeless/target/release/pipeless ~/.pipeless/
 
 Finally run the following so you can start using Pipeless:
 
+For Linux:
+
 ```bash copy
 export PATH="${HOME}/.pipeless:${PATH}"
 export LD_LIBRARY_PATH="${HOME}/.pipeless:${LD_LIBRARY_PATH}"
 ```
 
+For macOS:
+
+```bash copy
+export PATH="${HOME}/.pipeless:${PATH}"
+install_name_tool -add_rpath @executable_path "${PIPELESS_INSTALL_DIR}/pipeless
+```
+
 <Callout>
-Copy paste the above commands in your `~/.bashrc` or whatever file you use so Pipeless can be used in future sessions
+Copy paste the above `export` commands in your `~/.bashrc` or whatever file you use so Pipeless can be used in future sessions. If on macOS you do NOT have to copy the `install_name_tool` command in your profile.
 </Callout>

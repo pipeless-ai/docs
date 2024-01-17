@@ -164,6 +164,7 @@ Now let's move the built library into the Pipeless install directory. Run the fo
 ```bash copy
 mkdir ~/.pipeless
 cp ./build/Linux/Release/libonnxruntime*.so ~/.pipeless/
+ln -s "$HOME/.pipeless/libonnxruntime.so" "$HOME/.pipeless/libonnxruntime.so.1.16.3"
 ```
 
 Now, move out of the ONNX runtime repository and clone the Pipeless repository:

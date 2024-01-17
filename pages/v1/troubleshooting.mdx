@@ -14,12 +14,32 @@ script. You can also re-run the `pip install` with the correct pip binary usuall
 
 ## Pipeless cannot find the ONNX Runtime library
 
-This usually happens when you are installing with a target platform for which Microsoft does not provide a pre-build ONNX runtime.
-
 In this case you will see a message similar to the following:
 
 ```
-/root/.pipeless/pipeless: error while loading shared libraries: libonnxruntime.so.1.16.0: cannot open shared object file: No such file or directory
+error while loading shared libraries: libonnxruntime.so.1.16.0: cannot open shared object file: No such file or directory
+```
+
+Verify if under `~/.pipeless` the file `libonnxruntime.so` (when in Linux) or `libonnxruntime.dylib` (when in macOS) exist.
+
+If they exist run the following command:
+
+```
+# Linux
+ln -s "$HOME/.pipeless/libonnxruntime.so" "$HOME/.pipeless/libonnxruntime.so.1.16.3"
+
+# macOS
+ln -s "$HOME/.pipeless/libonnxruntime.dylib" "$HOME/.pipeless/libonnxruntime.1.16.0.dylib"
+```
+
+## Microsoft does not provide ONNX Runtime downloads for triplet
+
+This usually happens when you are installing with a target platform for which Microsoft does not provide a pre-build ONNX runtime.
+In this case you will see something like the following on the error:
+
+```
+Microsoft does not provide ONNX Runtime downloads for triplet: linux-arm64-gpu; you may have to use the `system` strategy instead
 ```
 
 Please check [this section](/v1/getting-started/installation#building-onnx-runtime-from-source) of the installation guide to correctly re-install pipeless.
+

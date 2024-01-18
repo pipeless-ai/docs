@@ -40,10 +40,10 @@ The [ONNX Runtime](https://onnxruntime.ai/) is widely used. Most of the machine 
 
 * Runtime key: `onnx`
 * Parameters:
-    `execution_provider`: The execution provider to use. Allowed values: `cpu`, `CUDA` (Linux and Windows only), `TensorRT` (Linux and Windows only), `OpenVINO`, `CoreML` (macOS only).
-    `execution_mode`: Either `Parallel` or `Sequential`. Check the [ONNX threading docs](https://onnxruntime.ai/docs/performance/tune-performance/threading.html).
-    `inter_threads`: A integer number. Only takes effect if `execution_mode` is `parallel` (and the model nodes can be run in parallel). Indicates the maximum number of threads to use to run them in parallel.
-    `intra_threads`: A integer number, Indicates the number of threads to parallelize the execution within nodes.
+  - `execution_provider`: The execution provider to use. Allowed values: `cpu`, `CUDA` (Linux and Windows only), `TensorRT` (Linux and Windows only), `OpenVINO`, `CoreML` (macOS only).
+  - `execution_mode`: Either `Parallel` or `Sequential`. Check the [ONNX threading docs](https://onnxruntime.ai/docs/performance/tune-performance/threading.html).
+  - `inter_threads`: A integer number. Only takes effect if `execution_mode` is `parallel` (and the model nodes can be run in parallel). Indicates the maximum number of threads to use to run them in parallel.
+  - `intra_threads`: A integer number, Indicates the number of threads to parallelize the execution within nodes.
 
 ## General Troubleshooting
 

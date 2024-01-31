@@ -7,15 +7,11 @@ description: A Pipeless example that runs inference using the ONNX Runtime and Y
 
 import { Steps, Callout } from 'nextra/components';
 
-This example makes use of the ONNX Runtime to run object detection using a YOLO model.
+This example makes use of the ONNX Runtime to run object detection using a YOLO model. It differs frm the [YOLO example](/v1/examples/yolov8) in that the later uses the Ultralytics SDK (Pytorch).
 
 The YOLO ONNX model was obtained by simply exporting the YOLOv8n model to the ONNX format.
 
-<Callout>
-This example was created to demonstrate how to load an ONNX model in Pipeless, thus, the post-processing code is not optimized.
-You can verify that the actual inference times on this example (ONNX Runtime) and the example that uses the Ultralytics
-SDK (Pytorch) are exactly the same, the only difference is in the post-processing implementation.
-</Callout>
+The pre-processing and post-processing is implemented using OpenCV and NumPy.
 
 ## Requirements
 

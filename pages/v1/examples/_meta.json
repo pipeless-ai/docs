@@ -1,5 +1,6 @@
 {
     "wattermark": "Adding wattermarks",
+    "custom-data": "Passing data between hooks and stages",
     "cats": "Detecting Cats on a Video",
     "tf-pose": "Pose detection with TensorFlow",
     "yolov8": "Object detection - YOLOv8 Python lib",

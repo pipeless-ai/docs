@@ -1,0 +1,56 @@
+---
+title: Passing data between stages
+description: A Pipeless example to show how you can easily add custom data to a frame, making it available for subsequent hooks.
+---
+
+# Passing custom data (per frame) between hooks and stages
+
+import { Steps, Callout } from 'nextra/components';
+
+This example contains boilerplate code that you can use to learn how to associate custom data to a frame. That custom data can be obtained back from other hooks of the same stage and even from hooks of subsequent stages.
+
+Note this mechanism allows you to associate data to a single frame. If you need data that will be shared by all frames check the [KV store documentation](/v1/kvstore).
+
+## Example
+
+This example contains boilerplate code that you can find [here](https://github.com/pipeless-ai/pipeless/tree/main/examples/custom-data).
+
+To assign custom data to a frame such as bounding boxes results, masks, or anything you like, you just need to set `frame_data['user_data']`. It accepts any type as value. The only restriction is that, if you set a dictionary as value, al the keys must be strings. Some examples:
+
+* Integers:
+    ```python copy
+    frame_data['user_data'] = 100
+    ```
+* Floats:
+    ```python copy
+    frame_data['user_data'] = 100.5
+    ```
+* Strings:
+    ```python copy
+    frame_data['user_data'] = "Hello!"
+    ```
+* Heterogeneus arrays:
+    ```python copy
+    frame_data['user_data'] = ["string", 13, 34.6]
+    ```
+* Heterogeneus Dictionaries (IMPORTANT: all keys must be strings):
+    ```python copy
+    frame_data['user_data'] = {
+        "key1": 0,
+        "key2": [1, "3"],
+        "key3": { "inner1": "hola" }
+    }
+    ```
+With that, in later hooks (either from the same stage or other) you can obtain back the data just accessing that field:
+
+```python copy
+my_data = frame_data['user_data']
+```
+
+In order to connect two or more stages, simply pass the list of stage names to the `add stream` command under the `frame-path` option. For example:
+
+```bash copy
+pipeless add stream --input-uri "file:///home/user/my/path.mp4" --output-uri "screen" --frame-path "stage1,stage2"
+```
+
+Using the above command, if you added data to the frame `user_data` field in a hook of `stage1` you will be able to use it in the hooks of `stage2`.

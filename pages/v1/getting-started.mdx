@@ -206,13 +206,14 @@ The frame data provided to the hook functions contains the following fields:
 
 Pipeless allows to create two kinds of hooks:
 
-* `stateless` (default): A stateless hook can run multiple instances of the hook at the same time for different frames.
+* `stateless` (default): A stateless hook can run multiple instances of the hook at the same time for different frames. They run with the **highest level of parallelization**.
     Stateless hooks should be used when an internal state is not required. For example, if you implement some pre-processing as a simple resize your hook does not
     require an internal state.
 
 * `stateful`: Stateful hooks are the kind of hook you want to use when some internal state is required. A good example of when to use a stateful hook is
     when you use an object tracking model, since these models maintain internal state. Stateful hooks introduce a bit of latency compared to stateless
-    hooks, since the internal state is locked and released on each frame to avoid corrupting it.
+    hooks, since the internal state is locked and released on each frame to avoid corrupting it, thus many frames cannot be processed at the same time. Stateful hooks also
+    ensure **sequential frame processing**, which means it will run for frames sorted by the frame number.
 
 By default all hooks are `stateless` unless you specify they aren't. As a general rule, use `stateless` hooks unless you need a hook to preserve some internal state, then you need to use `stateful` hooks.
 

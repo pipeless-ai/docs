@@ -1,17 +1,15 @@
 ---
-title: Object tracking with YOLO and Pipeless
-description: A Pipeless example that runs inference using a YOLO model and an object tracking using Norfair
+title: Object tracking with YOLO, Norfair and Pipeless
+description: A Pipeless example that runs inference using a YOLO model and performs object tracking via Norfair trackers
 ---
 
-# Object tracking - YOLO SDK and Norfair
+# Object tracking - YOLO and Norfair
 
 import { Steps, Callout } from 'nextra/components';
 
 This example makes use of a YOLO model with the Ultralytics SDK to detect objects and then a Norfair tracker to track their position. You can achieve the same result with any object detector, including the example with [ONNX Runtime](/v1/examples/onnx-yolo).
 
 In this case we connect two Pipeless stages making use of the `user-data` field of the frames to store the detections on the first stage and read them in the second.
-
-## Requirements
 
 ## Requirements
 
@@ -38,7 +36,7 @@ cd my-project
 
 ### Download the stage folders
 
-In this example we use two different stages. One is the same as the [YOLO example](/v1/examples/yolo) one and the other is the stage that performs the actual tracking.
+In this example we use two different stages. One is the same as the [YOLO example](/v1/examples/yolo) and the other is the stage that performs the actual tracking.
 
 ```bash copy
 wget -O - https://github.com/pipeless-ai/pipeless/archive/main.tar.gz | tar -xz --strip=2 "pipeless-main/examples/yolo"
@@ -55,7 +53,7 @@ pipeless start --stages-dir .
 
 ### Provide a stream
 
-In this case we concat the two stages. The first stage takes care of performing object detection with YOLO and
+In this case we concatenate the processing of two stages. The first stage takes care of performing object detection with YOLO and
 passes that data to the next stage. The second stage takes care of performing the object tracking with Norfair.
 Note the list of stages passed as `frame-path`.
 

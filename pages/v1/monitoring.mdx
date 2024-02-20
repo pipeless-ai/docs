@@ -1,0 +1,19 @@
+---
+title: Exporting stream events
+description: Understand how to export and monitor stream events from Pipeless
+---
+
+# Exporting events and monitoring
+
+In order to export events and monitor what is happening on your Pipeless streams you can configure a Redis publisher connection.
+
+The following env vars are required:
+
+- `PIPELESS_REDIS_URL`: URL of the remote Redis instance where to push the events.
+- `PIPELESS_REDIS_CHANNEL`: Name of the Redis channel where Pipeless should send the events.
+
+Then, start pipeless with the flag `--export-events-redis`:
+
+```bash
+pipeless start --project-dir /my-project --export-redis-events
+```

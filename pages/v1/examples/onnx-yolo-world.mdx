@@ -1,0 +1,71 @@
+---
+title: PPE detection with ONNX Runtime and YOLO-World
+description: A Pipeless example that runs inference using the ONNX Runtime and YOLO World to detect Personal Protective Equipment (PPE) in a video stream
+---
+
+# ONNX Runtime - PPE detection with YOLO-World
+
+import { Steps, Callout } from 'nextra/components';
+
+Using YOLO World you do not have to train the model. Instead, you just specify to the model the classes you want to detect. The classes to detect are "embedded: in the model and they were provided before exporting it to ONNX. If you want to change them, the easiest way is to do it via [HuggingFace](https://huggingface.co/spaces/stevengrove/YOLO-World). Just write what you want to detect there, run a test, and export the model file. Then update the `process.json` file to point to your new file.
+
+## Requirements
+
+* Pipeless: Check the [installation guide](/v1/getting-started/installation).
+
+* Python OpenCV and NumPy packages. Install them by running:
+
+```bash copy
+pip install opencv-python numpy
+```
+
+## Run the example
+
+<Steps>
+
+### Create an empty Pipeless project
+
+```bash copy
+pipeless init my-project --template empty # Using the empty template we avoid the interactive shell
+cd my-project
+```
+
+> Feel free to change `my-project` by any name you want.
+
+### Download the stage folder
+
+```bash copy
+wget -O - https://github.com/pipeless-ai/pipeless/archive/main.tar.gz | tar -xz --strip=2 "pipeless-main/examples/yolo-world"
+```
+
+### (Optional) If you have CUDA or TensorRT installed you can enable them at `process.json`
+
+```json {5}filename="process.json"
+{
+    "runtime": "onnx",
+    "model_uri": "https://pipeless-public.s3.eu-west-3.amazonaws.com/yolow-l-ppe.onnx",
+    "inference_params": {
+        "execution_provider": "cpu"
+    }
+}
+```
+
+### Start Pipeless
+
+The following command leaves Pipeless running on the current terminal. We add the `stream-buffer-size` to limit the number of frames that we accumulate, avoiding filling the memory. This is required because the model is relatively big and takes some time to run inference on CPU. Feel free to update the value or remove the option.
+
+```bash copy
+pipeless start --project-dir . --stream-buffer-size 35
+```
+
+### Provide a stream
+
+Open a new terminal and run:
+
+```bash copy
+pipeless add stream --input-uri "v4l2" --output-uri "screen" --frame-path "yolo-world"
+```
+
+This command assumes you have a webcam available, if you don't just change the input URI by a file (`file:///absolute/path/to/your/file`).
+
+</Steps>

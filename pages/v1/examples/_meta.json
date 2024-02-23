@@ -6,6 +6,7 @@
     "yolov8": "Object detection - YOLOv8 Python lib",
     "onnx-candy": "ONXX Runtime - Candy filter",
     "onnx-yolo": "ONNX Runtime - Object detection with YOLO",
+    "onnx-yolo-world": "ONNX Runtime - PPE detection with YOLO-World",
     "gaze-piano": "Play a piano with your eyes by looking to the notes",
     "object-tracking": "Object tracking - YOLO and Norfair"
 }

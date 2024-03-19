@@ -203,6 +203,7 @@ The frame data provided to the hook functions contains the following fields:
     * `inference_input`: When using an inference runtime (`process.json`) you provide the inference inputs by setting the `inference_input` field at the `pre-process` hook.
     * `inference_output`: When using an inference runtime (`process.json`) you can obtain the inference outputs by reading the `inference_output` field from the `post-process` hook.
     * `user_data`: This field allows you to associate data to the frame that you can later retreive from subsequent hooks, even if those hooks belong to other stages. It can contain any type of data, the only restriction is that dictionaries must use strings as keys. For more information check [this example](/v1/examples/custom-data).
+    * `frame_number`: Number of the frame in the stream
 
 ### Stateless vs Stateful hooks
 
